@@ -258,6 +258,76 @@ print({ x: 1, y: 2 })
 
 # 函数的类型
 
+## `函数类型表达式`
+
+在ts使用过程中，我们可以定义`函数参数的类型`，也可以定义 `函数返回值的类型`，那么**函数自身也应该有类型**
+
+我们可以编写 `函数类型表达式`来**表示函数类型**
+
+```ts
+(参数列表类型)=>返回值类型
+```
+
+```ts
+type BarType = (arg: number) => number
+const bar: BarType = (arg: number): number => {
+    return 1
+}
+```
+
+
+
+## `函数调用签名` 
+
+**函数类型表达式声明的函数不能`支持额外声明属性`，如果想描述一个带有属性的函数，可以在一个对象类型中写一个 `调用签名`**
+
+![image-20230807185245373](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807185245373.png)
+
+**函数调用签名(从对象的角度来看待这个函数，`既可以被调用，又可以新增额外属性`)**
+
+```ts
+interface IFn {
+    name: string
+    //函数可以调用：函数签名
+    (num1: number, num2: number): number
+}
+let fn2: IFn = (num1: number, num2: number): number => {
+    return 123
+}
+fn2.name = 'zds'
+
+fn2(1, 2)
+
+```
+
+
+
+总结：如果只是描述函数类型，就用函数类型表达式，如果要给函数新增属性，且函数作为对象需要能被调用，那么用函数调用签名
+
+
+
+## **匿名函数作为参数**
+
+**重点：**
+
+- 匿名函数或箭头函数如果`作为函数的参数`，那么`匿名函数自己的参数和返回值无需定义类型，它会自动推导`
+
+- 如果某一个`函数的参数是函数`，那么ts不会对这个`参数函数自己的参数个数进行校验` ，但是`调用的时候必须接受对应个数的参数了` （最经典的例子，forEach）
+
+  ![image-20230807184258559](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807184258559.png)
+
+```ts
+type FnType = (num1: number, num2: number) => number
+function calc(fn): number {
+    return fn(1, 2)
+}
+
+calc((num1, num2, num3) => 1)
+
+```
+
+
+
 ##     参数类型(不可推导)
 
 在我们定义一个ts的`函数`时，我们必须明确的`指定参数的类型`。不然`默认是any类型`，会提示错误
@@ -558,7 +628,7 @@ let num: string | number = 1
 num = '123'
 ```
 
-**注意：当TypeScript不确定一个联合类型的变量到底是哪个类型的时候，`只能访问联合类型中所有类型的共有属性和方法`**
+<a name='联合类型的问题'>**注意：当TypeScript不确定一个联合类型的变量到底是哪个类型的时候，`只能访问联合类型中所有类型的共有属性和方法`**</a>
 
 ![image-20230625153912596](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230625153912596.png)
 
@@ -1104,6 +1174,35 @@ const info2 = {
 ```
 
 ![image-20230807175027200](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807175027200.png)
+
+
+
+## 类型缩小
+
+> 在给定的执行路径中，我们可以 `将类型缩小成比声明更小的类型`，这个过程称为类型缩小，而进行判断的称为类型保护
+
+常见的类型保护有 typeof  instanceof  ===
+
+使用场景：**[注意：当TypeScript不确定一个联合类型的变量到底是哪个类型的时候，`只能访问联合类型中所有类型的共有属性和方法`](#联合类型的问题)**
+
+![image-20230807175909935](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807175909935.png)
+
+解决方案：
+
+​		①类型断言 as ，但是**断言只是欺骗ts编译器**，让其编译过程中不报错，但允许过程中如果传入number会报错。
+
+所以使用类型断言的前提，必须确定传入的值类型且非空
+
+​		②typeof 类型缩小
+
+```ts
+function printId(id: string | number) {
+    if (typeof id == 'string') {
+        console.log(id.length)
+    }
+}
+
+```
 
 
 

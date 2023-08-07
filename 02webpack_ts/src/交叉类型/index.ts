@@ -1,9 +1,5 @@
-interface IKun {
-    name: string
-    age: number
+function printId(id: string | number) {
+    if (typeof id == 'string') {
+        console.log(id.length)
+    }
 }
-interface ICoder {
-    name: string
-    codeing: () => void
-}
-
