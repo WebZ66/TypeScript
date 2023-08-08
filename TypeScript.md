@@ -97,7 +97,7 @@ console.log(z)
 **注意**：
 
 - `string`:TypeScript给我们定义标识符时，`即提供的字符串类型`
-- `String`：javascript中字符串的包装类   (类似于Date  let mess = new String('123'))
+- `String`：javascript中**字符串的包装类**   (类似于Date  let mess = new String('123'))
 
 
 
@@ -300,9 +300,29 @@ fn2(1, 2)
 
 ```
 
-
-
 总结：如果只是描述函数类型，就用函数类型表达式，如果要给函数新增属性，且函数作为对象需要能被调用，那么用函数调用签名
+
+
+
+## `构造签名`
+
+> 定义构造函数对应的类型  用的很少
+
+```ts
+class Person {}
+
+interface ICTORPerson {
+    new (): Person //构造签名
+}
+
+function factory(fn: ICTORPerson) {
+    const f = new fn()
+}
+
+//需要传入一个构造函数  class既创造了一个类也创造了对应的构造函数
+factory(Person)
+
+```
 
 
 
@@ -312,18 +332,26 @@ fn2(1, 2)
 
 - 匿名函数或箭头函数如果`作为函数的参数`，那么`匿名函数自己的参数和返回值无需定义类型，它会自动推导`
 
-- 如果某一个`函数的参数是函数`，那么ts不会对这个`参数函数自己的参数个数进行校验` ，但是`调用的时候必须接受对应个数的参数了` （最经典的例子，forEach）
+- 如果某一个`函数的参数是函数，即回调函数形式`，那么ts不会对`回调函数定义的参数个数`进行校验，但是`调用的时候必须接受对应个数的参数了` （最经典的例子，forEach）
 
-  ![image-20230807184258559](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807184258559.png)
+  <a name='回调函数参数个数检验'>回调函数参数个数</a>  **回调函数中只定义一个参数，不报错 (按照函数类型来说需要两个)**
+  
+  ![image-20230808141657082](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808141657082.png)
+  
+  **但是如果定义多个，就会报错**
+  
+  ![image-20230808141949722](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808141949722.png)
 
 ```ts
-type FnType = (num1: number, num2: number) => number
-function calc(fn): number {
-    return fn(1, 2)
+type callbackType = (num1: number, num2: number) => number
+
+function fn(callback: callbackType) {
+    callback(10, 20)
 }
 
-calc((num1, num2, num3) => 1)
-
+fn(function (num1) {
+    return 1
+})
 ```
 
 
@@ -372,6 +400,10 @@ name.forEach((item: string, index: number, arr) => {
 
 
 
+**重点②：回调函数的参数个数是不会被ts所检验的**，**但是调用的时候需要传正确的参数**
+
+[案例](#回调函数参数个数检验)
+
 ## 函数标识符的类型
 
 **即用函数表达式方式创建的函数，其变量的类型（这时候就需要`用void表明没有返回值`了）**
@@ -384,7 +416,7 @@ let mySum = function (x: number, y: number): number {
 };
 ```
 
-这是可以通过编译的，不过事实上，上面的代码只对等号右侧的匿名函数进行了类型定义，而等号左边的 `mySum`，是通过赋值操作进行类型推论而推断出来的。如果需要我们手动给 `mySum` 添加类型，则应该是这样：
+这是可以通过编译的，不过事实上，上面的代码只对等号右侧的匿名函数进行了类型定义，而等号左边的 `mySum`，是通过赋值操作进行类型推论而推断出来的。如果需要我们手动给 `mySum` 添加类型，则应该是这样： **即函数类型表达式**
 
 ```ts
 let mySum: (x: number, y: number) => number = function (x: number, y: number): number {
@@ -414,7 +446,7 @@ delayExecFn(fn)
 
 ```
 
-**用接口定义函数的形式**
+**用接口定义函数的形式**  即**函数调用签名**
 
 我们也可以使用接口的方式来定义一个函数需要符合的形状：
 
@@ -433,9 +465,28 @@ mySearch = function(source: string, subString: string) {
 
 
 
+## 可选参数
+
+可选参数的类型：`默认是联合类型` **xx|undefined**
+
+![image-20230808150210325](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808150210325.png)
+
+所以使用可选参数的时候，必须进行`类型缩小`
+
+```ts
+function fn(x: number, y?: number) {
+    if (y) {
+        console.log(y + 10)
+    }
+}
+
+```
+
 ## 参数默认值
 
-在 ES6 中，我们允许给函数的参数添加默认值，**TypeScript 会将添加了默认值的参数识别为可选参数**：
+在 ES6 中，我们允许给函数的参数添加默认值，**TypeScript 会将`添加了默认值的参数就是可选参数`**
+
+**添加了默认值的参数，类型注解可以去掉，会自动进行类型推导**
 
 ```ts
 function buildName(firstName: string, lastName: string = 'Cat') {
@@ -456,6 +507,17 @@ let cat = buildName(undefined, 'Cat'); //但是注意，第一个参数还是要
 ```
 
 
+
+**有默认值的参数，是可以接受一个undefined的值，写了无效而已**
+
+```ts
+function fn(x: number, y = 100) {
+    return (y as number) + 10
+}
+console.log(fn(1, undefined))
+```
+
+![image-20230808150809167](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808150809167.png)
 
 ## 剩余参数
 
@@ -495,42 +557,123 @@ push(a, 1, 2, 3);
 
 ①函数声明创建的函数，直接定义参数类型和返回值类型(返回值类型可以通过类型推导推导出来)。
 
-②函数表达式创建的函数
+②函数类型表达式(用type)
 
 ```ts
-const fn = function (name: string): string {
-    return name
+type FnType = () => number
+const fn: FnType = () => {
+    return 1
 }
+```
 
-const fn2 = (name: string): string => {
-    return name
-}
+③函数调用签名(interface) 需要额外添加参数
 
-//3和5其实是一种
-const fn3: (name: string) => string = (name) => {
-    return name
+```ts
+interface IFn {
+    name: string
+    (x: number): void
 }
-
-interface Fn4 {
-    (name: string): string
-}
-const fn4: Fn4 = (name) => {
-    return name
-}
-
-type Fn5 = (name: string) => string
-const fn5: Fn5 = (name) => {
-    return name
-}
+const fn: IFn = (x: number) => {}
+fn.name = 'zds'
+```
 
 
+
+## 函数重载
+
+重载允许一个函数接受不同数量或类型的参数时，作出不同的处理。
+
+比如，我们需要实现一个函数 `reverse`，输入数字 `123` 的时候，输出反转的数字 `321`，输入字符串 `'hello'` 的时候，输出反转的字符串 `'olleh'`。
+
+利用联合类型，我们可以这么实现：
+
+```ts
+function reverse(x: number | string): number | string | void {
+    if (typeof x === 'number') {
+        return Number(x.toString().split('').reverse().join(''));
+    } else if (typeof x === 'string') {
+        return x.split('').reverse().join('');
+    }
+}
+```
+
+**然而这样有一个缺点，就是不能够精确的表达，还需要进行类型缩小**
+
+
+
+> 在ts中，我们可以`编写不同的重载签名，以表示不同的方式进行调用`
+
+```ts
+//先编写重载签名
+function add(arg1: number, arg2: number): number
+function add(arg1: string, arg2: string): string
+
+//再编写通用的函数实现   add()是不能直接被调用的~
+function add(arg1: any, arg2: any) {
+    return arg1 + arg2
+}
+add(1,2) // √
+add(1,'2')// ×
+```
+
+![image-20230808152106913](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808152106913.png)
+
+
+
+**函数重载和联合类型的对比**
+
+可以使用联合类型的情况下，用联合类型。如果联合类型很复杂，需要进行类型缩小，那可以用重载
+
+```ts
+//重载
+function getLength(str: string): number
+function getLength(str: any[]): number
+function getLength(str: any) {
+    return str.length
+}
+
+//联合类型
+function getLength(str: string | any[]) {
+    return str.length
+}
+
+```
+
+
+
+
+
+## this
+
+在vue3的composition api和react的hook中，this已经很少见了，但是我们封装一些库函数，可能函数需要this的
+
+> 如果没有对ts进行特殊配置，那么this默认是any类型的。如果开启了会提示错误(默认是关闭的)
+>
+> ![image-20230808160555905](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808160555905.png)
+
+```ts
+//1.对象方法中的this
+const obj = {
+    name: 'zds',
+    studying() {
+        //默认情况下，this是any类型
+        console.log(this.name, '正在studying')
+    }
+}
+```
+
+```ts
+//普通函数
+function foo() {
+    console.log(this) //也是any类型
+}
 ```
 
 
 
 # TS扩展的类型 
 
-##   any类型
+##   any类型 
 
 （使用any并不可耻,但不要处处用❤❤❤❤❤）
 

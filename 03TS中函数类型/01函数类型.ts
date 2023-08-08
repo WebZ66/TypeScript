@@ -1,11 +1,9 @@
-interface IFn {
-    name: string
-    //函数可以调用：函数签名
-    (num1: number, num2: number): number
-}
-let fn2: IFn = (num1: number, num2: number): number => {
-    return 123
-}
-fn2.name = 'zds'
+type callbackType = (num1: number, num2: number) => number
 
-fn2(1, 2)
+function fn(callback: callbackType) {
+    callback(10, 20)
+}
+
+fn(function (num1,num2,num3) {
+    return 1
+})
