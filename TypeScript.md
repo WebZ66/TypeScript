@@ -643,7 +643,7 @@ function getLength(str: string | any[]) {
 
 
 
-## this
+## 函数中的this
 
 在vue3的composition api和react的hook中，this已经很少见了，但是我们封装一些库函数，可能函数需要this的
 
@@ -668,6 +668,110 @@ function foo() {
     console.log(this) //也是any类型
 }
 ```
+
+
+
+**手动指定this类型 (用call或者apply)**
+
+首先需要开启配置  noImplicitThis
+
+- 函数的`第一个参数名字必须叫this`，可以`根据函数被调用的情况`，用于**声明this的类型**
+- 后续调用函数传入参数时，从第二个参数开始传递
+
+```
+function foo(this: { name: string }, obj: { name: string }) {
+    console.log(this)  //{name:'zds'}
+}
+foo.call({ name: 'zds' }, { name: 'xqq' })
+```
+
+  
+
+​    
+
+# 类
+
+## 基础用法
+
+```ts
+class Person {
+    name: string
+    age: number
+    constructor(name: string, age:number) {
+        this.name = name
+        this.age = age
+    }
+}
+
+let p1 = new Person('zds', 12)
+
+```
+
+如果不定义类型，默认是any
+
+![image-20230808164451278](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808164451278.png)
+
+
+
+## 类的继承  extends
+
+使用 `extends` 关键字实现继承，子类中使用 `super` 关键字来调用父类的构造函数和方法。
+
+```ts
+class Animal {
+    name: string
+    age: number
+    constructor(name: string, age: number) {
+        this.name = name
+        this.age = age
+    }
+}
+
+class Cat extends Animal {
+    constructor(name: string, age: number) {
+        super(name, age)
+    }
+}
+
+```
+
+
+
+## 类的修饰符
+
+| 修饰符    | 作用范围                                                     |
+| --------- | ------------------------------------------------------------ |
+| public    | 任何地方(实例、当前类、子类)都可见、公有的属性或方法，默认编写的属性就是public |
+| private   | 仅在`同一类中可见`、`私有的属性或方法`                       |
+| protected | 仅在**自身**和**子类中可见**、受保护的属性或方法             |
+
+
+
+
+
+## 类的存取器
+
+使用 getter 和 setter 可以改变属性的赋值和读取行为：
+
+```js
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  get name() {
+    return 'Jack';
+  }
+  set name(value) {
+    console.log('setter: ' + value);
+  }
+}
+
+let a = new Animal('Kitty'); // setter: Kitty
+a.name = 'Tom'; // setter: Tom
+console.log(a.name); // Jack
+```
+
+
 
 
 
@@ -1417,9 +1521,33 @@ const todo1: TodoOmited = {
     title: 'string',
     description: '123',
 }
-
 ```
 
 
 
-[^2]: 
+## ThisParameterType
+
+> 获取某一类型中this的类型
+
+```ts
+function foo(this: { name: string }, obj: { name: string }) {
+    console.log(this)
+}
+
+type fooType = typeof foo
+
+type fooThisType = ThisParameterType<fooType>
+
+let n: fooThisType = {
+    name: 'zds'
+}
+```
+
+![image-20230808163206735](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808163206735.png)
+
+
+
+## OmitThisParameter
+
+> 用于移除一个函数类型Type的this参数类型，并且返回当前的函数类型
+
