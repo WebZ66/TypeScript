@@ -1,6 +1,6 @@
 interface IPerson {
-    name: string
-    age: number
+    [index: number]: string
+    [propName: string]: any
 }
 let p = {
     name: 'zds',
@@ -9,7 +9,5 @@ let p = {
 }
 
 const info: IPerson = p
-
-
 
 export {}

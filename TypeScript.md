@@ -241,7 +241,7 @@ console.log(info.name);//会直接报错
 
 ## 对象类型的使用
 
-常常使用type来定义对象类型。
+常常使用type来定义类型别名。
 
 ```ts
 type PointType = { x: number; y?: number }
@@ -252,7 +252,7 @@ function print(point: PointType) {
 print({ x: 1, y: 2 })
 ```
 
-
+当然更常用的是[接口](#接口)
 
 
 
@@ -309,18 +309,27 @@ fn2(1, 2)
 > 定义构造函数对应的类型  用的很少
 
 ```ts
-class Person {}
-
-interface ICTORPerson {
-    new (): Person //构造签名
+class Person {
+    constructor(public name: string, public age: number) {
+        this.name = name
+        this.age = age
+    }
 }
 
-function factory(fn: ICTORPerson) {
-    const f = new fn()
+function MyPerson(name: string, age: number) {
+    this.name = name
+    this.age = age
 }
 
-//需要传入一个构造函数  class既创造了一个类也创造了对应的构造函数
-factory(Person)
+let p: Person = new MyPerson('zds', 12)
+console.log(p.name)
+
+interface IPerson {
+    new (): Person
+}
+
+function createPerson(p: IPerson) {}
+
 
 ```
 
@@ -551,34 +560,6 @@ push(a, 1, 2, 3);
 
 
 
-> 函数总结
-
-定义函数类型的方式：
-
-①函数声明创建的函数，直接定义参数类型和返回值类型(返回值类型可以通过类型推导推导出来)。
-
-②函数类型表达式(用type)
-
-```ts
-type FnType = () => number
-const fn: FnType = () => {
-    return 1
-}
-```
-
-③函数调用签名(interface) 需要额外添加参数
-
-```ts
-interface IFn {
-    name: string
-    (x: number): void
-}
-const fn: IFn = (x: number) => {}
-fn.name = 'zds'
-```
-
-
-
 ## 函数重载
 
 重载允许一个函数接受不同数量或类型的参数时，作出不同的处理。
@@ -601,7 +582,7 @@ function reverse(x: number | string): number | string | void {
 
 
 
-> 在ts中，我们可以`编写不同的重载签名，以表示不同的方式进行调用`
+> 在ts中，我们可以`编写不同的重载签名，以表示不同的方式进行调用，然后编写通用的函数实现`
 
 ```ts
 //先编写重载签名
@@ -649,7 +630,7 @@ function getLength(str: string | any[]) {
 
 > 如果没有对ts进行特殊配置，那么this默认是any类型的。如果开启了会提示错误(默认是关闭的)
 >
-> ![image-20230808160555905](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808160555905.png)
+> ![image-20230808160555905](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808160555905.png) 
 
 ```ts
 //1.对象方法中的this
@@ -687,7 +668,33 @@ foo.call({ name: 'zds' }, { name: 'xqq' })
 
   
 
-​    
+##  函数总结
+
+定义函数类型的方式：
+
+①函数声明创建的函数，直接定义参数类型和返回值类型(返回值类型可以通过类型推导推导出来)。
+
+②函数类型表达式(用type)
+
+```ts
+type FnType = () => number
+const fn: FnType = () => {
+    return 1
+}
+```
+
+③函数调用签名(interface) 需要额外添加参数
+
+```ts
+interface IFn {
+    name: string
+    (x: number): void
+}
+const fn: IFn = (x: number) => {}
+fn.name = 'zds'
+```
+
+
 
 # 类
 
@@ -709,7 +716,15 @@ let p1 = new Person('zds', 12)
 
 如果不定义类型，默认是any
 
-![image-20230808164451278](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808164451278.png)
+![image-20230808164451278](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808164451278.png) 
+
+
+
+**类的作用**
+
+- **创建出类的实例对象**
+- `类本身作为实例的类型`
+- **类也可以当作一个有`构造签名`的函数**
 
 
 
@@ -744,6 +759,7 @@ class Cat extends Animal {
 | public    | 任何地方(实例、当前类、子类)都可见、公有的属性或方法，默认编写的属性就是public |
 | private   | 仅在`同一类中可见`、`私有的属性或方法`                       |
 | protected | 仅在**自身**和**子类中可见**、受保护的属性或方法             |
+| readonly  | **只读属性**，不能修改                                       |
 
 
 
@@ -751,27 +767,191 @@ class Cat extends Animal {
 
 ## 类的存取器
 
-使用 getter 和 setter 可以改变属性的赋值和读取行为：
+使用 getter 和 setter 可以改变属性的赋值和读取行为，进行**拦截判断**
+
+**常用于：私有属性暴露**
 
 ```js
-class Animal {
-  constructor(name) {
-    this.name = name;
-  }
-  get name() {
-    return 'Jack';
-  }
-  set name(value) {
-    console.log('setter: ' + value);
-  }
+class Person {
+    //约定俗称的规范：私有属性前会加_
+    private _name: string
+    constructor(name: string) {
+        this._name = name
+    }
+	//
+    set name(newValue: string) {
+        this._name = newValue
+    }
+    get name() {
+        return this._name
+    }
 }
 
-let a = new Animal('Kitty'); // setter: Kitty
-a.name = 'Tom'; // setter: Tom
-console.log(a.name); // Jack
+let p = new Person('zds')
+console.log(p.name)
+export {}
 ```
 
 
+
+## 类的参数属性
+
+> 它是一种语法题，即在`构造函数的参数前面添加修饰符`。它默认进行了两个操作，一个是定义其类型，另一个是添加上修饰符
+
+```ts
+class Person {
+    age: number
+    constructor(public name: string, age: number) {
+        this.name = name
+        this.age = age
+    }
+}
+let p = new Person('zds', 12)
+console.log(p.name)
+
+export {}
+
+```
+
+**等同于**
+
+```ts
+class Person {
+    name: string
+    age: number
+    constructor(name: string, age: number) {
+        this.name = name
+        this.age = age
+    }
+}
+let p = new Person('zds', 12)
+console.log(p.name)
+
+export {}
+```
+
+
+
+## 抽象类 abstract（了解即可）
+
+****
+
+**什么是抽象方法？**
+
+- [ ] 抽象方法，必须`存在于抽象类中`
+- [ ] 抽象类是用`abstract声明的类`
+
+**特点：抽象方法在抽象类中只有声明，没有实现体。子类必须实现抽象方法的实现体**
+
+```ts
+abstract class Shape {
+    //抽象方法getArea只有声明，没有实现体
+    //抽象方法必须放在抽象类中
+    //特点：抽象方法的实现体，子类必须实现
+    abstract getArea()
+}
+
+class Rectangle extends Shape {
+    constructor(public width: number, public height: number) {
+        super()
+        this.width = width
+        this.height = height
+    }
+    getArea() {
+        return this.width * this.height
+    }
+}
+
+class Circle extends Shape {
+    constructor(public radius: number) {
+        super()
+        this.radius = radius
+    }
+    getArea() {
+        return this.radius * this.radius
+    }
+}
+
+function calcArea(shape: Shape) {}
+
+```
+
+
+
+## 抽象类和接口的区别(了解即可)
+
+**相同点：**
+
+- 都可以在其中定义方法，让子类或者实现类实现
+
+**不同点**
+
+- 抽象类中的方法称为抽象方法，**只有声明没有实现体**，需要在子类中实现。接口则可以用来描述对象或类的属性和行为
+- 抽象类是由**子类继承**的，接口可以直接作为对象的类型注解，也可以由类来implement
+- `接口可以重复定义，实现该接口的时候必须符合所有接口特性`，抽象类和type都不可以重复定义
+
+
+
+## TS中类型检测--鸭子类型
+
+用ts的时候，会发现一种很奇怪的事情,明明函数参数要求传入的是Person类型，但是我直接传了一个相似对象，居然也不报错
+
+![image-20230809160713104](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809160713104.png) 
+
+**原因：TS类型检测时，使用的是`鸭子类型`**。鸭子类型`只关心属性和行为`，不关心具体是不是那个类型。
+
+如下：**getPerson只关心传入的参数对象有没有name属性，有没有age属性，如果传入的对象有对应属性，那就认为是`同一只鸭子`**。
+
+![image-20230809161130238](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809161130238.png) 
+
+![image-20230809161547795](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809161547795.png) 
+
+
+
+## 类实现接口
+
+> 通过implements实现接口，使得类具有接口的相应特性。`创建出来的实例也会具有接口的所有特性`
+
+```ts
+interface IKun {
+    name: string
+    age: string
+    slogan: string
+    play: () => void
+}
+
+class Person implements IKun {
+    constructor(public name: string, public age: string, public slogan: string) {}
+    play() {}
+}
+
+let p = new Person('zds', '12', 'xx')
+```
+
+**注意：一个类可以实现多个接口，`该类需要实现所有接口的特性`**
+
+```ts
+interface IKun {
+    name: string
+    age: string
+    slogan: string
+    play: () => void
+}
+
+interface IRun {
+    fly: string
+    running: () => void
+}
+
+class Person implements IKun, IRun {
+    fly: string
+    constructor(public name: string, public age: string, public slogan: string, fly: string) {}
+    play() {}
+    running() {}
+}
+
+let p = new Person('zds', '12', 'xx', 'fly')
+```
 
 
 
@@ -844,7 +1024,7 @@ function fn(): void {
 }
 ```
 
-![image-20230621160555105](C:\Users\01427334\AppData\Roaming\Typora\typora-user-images\image-20230621160555105.png)
+![image-20230621160555105](C:\Users\01427334\AppData\Roaming\Typora\typora-user-images\image-20230621160555105.png) 
 
 
 
@@ -877,7 +1057,7 @@ num = '123'
 
 <a name='联合类型的问题'>**注意：当TypeScript不确定一个联合类型的变量到底是哪个类型的时候，`只能访问联合类型中所有类型的共有属性和方法`**</a>
 
-![image-20230625153912596](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230625153912596.png)
+![image-20230625153912596](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230625153912596.png) 
 
 上例中，`length` 不是 `string` 和 `number` 的共有属性，所以会报错。
 
@@ -891,9 +1071,9 @@ function getString(something: string | number): string {
 
 **最常见的：`获取DOM元素后，获取其属性`**
 
-![image-20230807155941400](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807155941400.png)
+![image-20230807155941400](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807155941400.png) 
 
-![image-20230807155959497](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807155959497.png)
+![image-20230807155959497](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807155959497.png) 
 
 **联合类型的变量在被赋值的时候，会根据赋的值进行类型推导，`推导出变量的类型注解`**
 
@@ -914,7 +1094,7 @@ console.log(myFavoriteNumber.length); // 编译时报错
 
 ts中不可能同时是number和string类型，因此返回never类型，无意义
 
-![image-20230807154752285](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807154752285.png)
+![image-20230807154752285](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807154752285.png) 
 
 交叉类型主要用于对象类型
 
@@ -938,6 +1118,47 @@ const info: IKun & ICoder = {
 
 
 
+## **枚举类型**
+
+**语法:** 
+
+```ts
+enum Direction {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+}
+
+function turnDirection(direction: Direction) {
+    switch (direction) {
+        case Direction.LEFT:
+            console.log('left')
+            break
+    }
+}
+
+turnDirection(Direction.UP)
+```
+
+
+
+**枚举类型的默认值**
+
+枚举成员默认会`被赋值为从0开始递增的数字`
+
+```ts
+enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};  0 1 2 3...
+```
+
+也可以手动赋值，**未手动赋值的枚举型会跟着上一个枚举的值递增**
+
+```
+enum Days {Sun = 7, Mon = 1, Tue, Wed, Thu, Fri, Sat};  //Tue:2 Wed:3...
+```
+
+
+
 ## type
 
 > 通过`type`关键字给某些类型起一个别名，方便复用
@@ -955,6 +1176,8 @@ printCoordinate({ x: 1, y: 2 })
 
 
 ## interface
+
+<a name='接口'>接口</a>
 
 在TypeScript中，我们常常使用`接口来定义对象的类型`,(当然type类型别名也可以)。
 
@@ -1075,7 +1298,7 @@ tom.id = 9527;
 
 上例中，使用 `readonly` 定义的属性 `id` 初始化后，又被赋值了，所以报错了。
 
-**注意，只读的约束存在于第一次给对象赋值的时候，而不是第一次给只读属性赋值的时候**：
+**注意，只读的约束存在于`第一次给对象赋值`的时候，而不是第一次给只读属性赋值的时候**：
 
 ```ts
 interface Person {
@@ -1103,6 +1326,37 @@ tom.id = 89757;
 
 
 
+**接口的继承特性**
+
+> 可以从别的接口继承相关属性类型
+
+**作用：**
+
+- **减少相同代码重复编写**
+- **如果使用第三方库，第三方库定义了对应类型，我们希望能添加一些额外类型，就可以用接口继承**
+
+```ts
+interface IPerson {
+    name: string
+    age: number
+}
+
+interface IKun extends IPerson {
+    slogan: string
+}
+
+const ikun: IKun = {
+    name: 'why',
+    age: 12,
+    slogan: '13'
+}
+
+```
+
+
+
+
+
 
 
 ## type和interface的区别
@@ -1118,9 +1372,9 @@ tom.id = 89757;
 
 > 总结：type的范围更广，可以声明基本类型也可以声明对象类型。interface虽然只能声明对象类型，但是它有很多及其好用的特性。比如重复声明需同时满足，比如继承等。`如果定义非对象类型(联合类型，交叉类型)，用type，定义对象类型用interface`
 
-![image-20230807153218354](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807153218354.png)
+![image-20230807153218354](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807153218354.png) 
 
-![image-20230807153340452](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807153340452.png)
+![image-20230807153340452](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807153340452.png) 
 
 
 
@@ -1339,7 +1593,7 @@ console.log(p1.friend?.name) //undefined
 
 **但是属性赋值是不能用可选链**
 
-![image-20230807171228511](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807171228511.png)
+![image-20230807171228511](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807171228511.png) 
 
 **解决措施**
 
@@ -1364,11 +1618,13 @@ console.log(p1.friend?.name) //undefined
 
 ## 字面量类型
 
+### 使用
+
 **let n: 'POST' = 'POST'**
 
 > 将一个值作为其类型，之后该变量赋值也只能是对应的值
 
-**作用：配合 | 联合类型 将多个字面量类型联合起来。**
+`作用`：**配合 | 联合类型 将多个字面量类型联合起来。**
 
 ```ts
 常见使用 定义方法类型是字面量类型
@@ -1393,7 +1649,7 @@ const testInfo = {
 request(testInfo.url, testInfo.method) //会报错
 ```
 
-![image-20230807174538978](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807174538978.png)
+![image-20230807174538978](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807174538978.png) 
 
 **因为testInfo.method类型是string类型**
 
@@ -1420,7 +1676,37 @@ const info2 = {
 } as const
 ```
 
-![image-20230807175027200](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807175027200.png)
+![image-20230807175027200](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807175027200.png) 
+
+
+
+### 严格的字面量赋值检测:imp:
+
+**对于TS的字面量赋值，TS有一个很奇怪的现象：**
+
+如果`对象字面量赋值`中的属性不在接口中出现会报错，这个很正常
+
+
+
+![image-20230809172728020](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809172728020.png)   <a name='fresh'>新鲜</a>![image-20230809172759169](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809172759169.png)
+
+
+
+**但是，如果用一个变量暂存，它就不报错了 **<a name='扩散'>对象字面量被扩散到变量p上</a>
+
+![image-20230809172840145](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809172840145.png) 
+
+ **解释：**
+
+> 第一次创建的对象字面量，称之为fresh([新鲜的](#fresh))，`对于新鲜的字面量，会进行严格的类型检测`，必须`完全满足类型的要求`(不能多或少于接口属性)
+
+>当类型断言或当 [对象字面量扩散](#扩散) 的时候 ，就不进行严格检测，新鲜度消失。**但是得注意，如果想要获取对应的值(但是接口里没有定义)，ts还是会报错的**
+>
+>![image-20230809173901878](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809173901878.png) 
+
+ 
+
+
 
 
 
@@ -1432,7 +1718,7 @@ const info2 = {
 
 使用场景：**[注意：当TypeScript不确定一个联合类型的变量到底是哪个类型的时候，`只能访问联合类型中所有类型的共有属性和方法`](#联合类型的问题)**
 
-![image-20230807175909935](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807175909935.png)
+![image-20230807175909935](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807175909935.png) 
 
 解决方案：
 
@@ -1452,6 +1738,225 @@ function printId(id: string | number) {
 ```
 
 
+
+## 索引签名
+
+即**任意属性**
+
+有时候我们希望一个接口允许有任意的属性，可以使用如下方式：
+
+```ts
+interface Person {
+    name: string;
+    age?: number;
+    [propName: string]: any;
+}
+
+let tom: Person = {
+    name: 'Tom',
+    gender: 'male'
+};
+```
+
+使用 `[propName: string]` 定义了任意属性取 `string` 类型的值。
+
+需要注意的是，**一旦定义了任意属性，那么`确定属性和可选属性的类型都必须是它的类型的子集`**
+
+**注意点：在js中，对象[变量]无论传入什么，最后都会被转化为字符串**
+
+![image-20230809174639618](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809174639618.png)![image-20230809174645624](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809174645624.png)
+
+**而在ts中，索引签名只能是`number|string`**
+
+```ts
+interface IIndexType {
+    [aaa: number | string]: any  //所以只需要[propName:string]:any即可
+}
+
+let nums: IIndexType = ['abc', 'bac', 'cab']
+console.log(nums['0'])
+console.log(nums[0])
+
+```
+
+![image-20230810144144320](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810144144320.png) 
+
+如果分别定义了两个索引签名(),**注意数字类型的索引签名必须是字符串类型的子集**
+
+![image-20230810144256012](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810144256012.png) ![image-20230810144304579](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810144304579.png)
+
+
+
+
+
+# 泛型
+
+为什么要有泛型？
+
+开发的主要目的之一是写出具有很强复用性的代码。比如封装了防抖等等工具函数
+
+## **作用和语法**
+
+ `类型参数化，即将参数的类型也变为一个参数使用`
+
+> 例如我想实现一个传入什么类型，返回值就什么类型的函数，可以用函数重载实现，但是每次多个类型都要写个重载签名，太麻烦了
+>
+> ![ ](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810151605408.png) 
+
+而泛型就可以轻松的实现`类型参数化`。
+
+```ts
+function bar<T>(n: T): T {
+    return n
+}
+
+bar<number>(1)
+bar<string>('1')
+
+```
+
+
+
+## 泛型接口和泛型类
+
+**泛型接口：**
+
+```ts
+interface IKun<Type> {
+    name: Type
+    age: Type
+    slogan: string
+}
+
+const kunkun: IKun<string> = {
+    name: '1',
+    age: '123',
+    slogan: '123'
+}
+
+```
+
+**泛型接口还可以含有`默认值`，有默认值就无需指定泛型接口的参数了**
+
+![image-20230810154350394](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810154350394.png) 
+
+
+
+**泛型类：**
+
+```ts
+class Point<Type = string> {
+    x: Type
+    y: Type
+    constructor(x: Type, y: Type) {
+        this.x = x
+        this.y = y
+    }
+}
+const p1 = new Point<number>(1, 2)
+const p2 = new Point('3', '4')
+
+```
+
+
+
+
+
+
+
+## 泛型约束
+
+`泛型约束：传入的类型必须要有这个属性，也可以有其他属性，但是必须至少有这个成员!`
+
+**泛型约束使用**
+
+- [ ] 有时候，我们希望传入的类型有某些共性，但是这些共性不是在同一种类型中
+
+- [ ] 比如string和array都有length，或者某些对象也是有length
+
+  那么**要求拥有length的属性都可以作为我们的参数类型**
+
+  > 最初，将Ilength类型赋值给参数，但这会导致两个问题，一个是返回的a、b会丢失类型，他们不再是原始的number[]，而都变成了ILength类型。其次，要求是对象含有length属性，而不是对象只能有length属性
+
+  ![image-20230810160002407](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810160002407.png)
+
+
+
+**泛型约束写法**
+
+`Type相当于一个变量，用于记录本次调用时传入的类型，所以在整个函数的执行期间，一直保留着对应的类型`
+
+![image-20230810160152866](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810160152866.png) 
+
+`泛型约束：传入的类型必须要有这个属性，也可以有其他属性，但是必须至少有这个成员!`
+
+
+
+**案例2：传入一个对象和key，并定义相应类型**
+
+- 首先，可以**声明一个类型参数**，这个类型参数被其他类型参数约束
+
+```ts
+function getObjectProperty<O, K extends keyof O>(obj: O, key: K) {
+    return obj[key]
+}
+
+const info = {
+    name: 'zds',
+    age: 22
+}
+interface IInfo {
+    name: string
+    age: number
+}
+//keyof：将接口中的类型名转化称  字面量联合类型
+type keyType = keyof IInfo //等同于 "name"|"age"
+
+const name2 = getObjectProperty<IInfo, keyType>(info, 'name')
+const name = getObjectProperty<IInfo, 'name' | 'age'>(info, 'age')
+
+export {}
+```
+
+
+
+# 映射类型
+
+> 使用场景：一个类型需要基于另一个类型，但是又不想直接复制粘贴一份，就可以使用映射类型
+
+- **映射类型建立在索引签名的语法上**
+
+- **映射类型本质上是`使用了propertyKeys联合类型的泛型`**
+
+- **其中propertyKeys通过keyof创建，然后通过in循环遍历创建对应键名的类型**
+
+  ```ts
+  type MapPerson<Type> = {
+      [Property in keyof Type]: Type[Property]
+  }
+  
+  interface IPerson {
+      name: string
+      age: number
+  }
+  
+  type MyPerson = MapPerson<IPerson>
+  
+  export {}
+  ```
+
+
+
+**映射类型的修饰符**
+
+在使用映射类型时，有两个额外的修饰符可能会用到：
+
+- [ ] 一个是readonly，用于设置属性只读
+- [ ] 一个是 ? ,用于设置属性可选
+
+**还可以通过 - 或者 + 来实现修饰符的添加删除，如果没有写前缀，默认是 + **
+
+![image-20230810163352623](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810163352623.png) 
 
 # TS内置符号
 
