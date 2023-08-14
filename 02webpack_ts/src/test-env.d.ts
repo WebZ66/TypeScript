@@ -1,0 +1,1 @@
+declare module 'xxb-publish'

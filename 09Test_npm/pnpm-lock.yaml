@@ -1,0 +1,12 @@
+lockfileVersion: '6.0'
+
+dependencies:
+  xxb-publish:
+    specifier: ^1.0.1
+    version: 1.0.1
+
+packages:
+
+  /xxb-publish@1.0.1:
+    resolution: {integrity: sha512-X43SFUCQassPn7Ic0Q/QJBgngCuARrYOq4js0xrma4jesSLJwx0jusxA/+trqf+M+g0t0820lpIxRovVVS4fxg==}
+    dev: false

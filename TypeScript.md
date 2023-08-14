@@ -17,7 +17,7 @@ console.log(getLength(1));  //undefined
 console.log(getLength());  //报错
 ```
 
-![](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230620142740865.png)
+![](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230620142740865.png) 
 
 
 
@@ -39,9 +39,8 @@ npm init -y  //生成package.json
 tsc --init   //生成tsconfig.json
 ```
 
-```
-安装：
-npm install typescript ts-loader webpack webpack-cli webpack-dev-server html-webpack-plugin
+```js
+安装：npm install typescript ts-loader webpack webpack-cli webpack-dev-server html-webpack-plugin
 ```
 
 **webpack.config.js配置**
@@ -69,7 +68,7 @@ module.exports = {
     },
   },
   module: {
-    rules: [{ test: /\.ts/, use: ['ts-loader'] }],
+    rules: [{ test: /\.ts$/, use: ['ts-loader'] }],
   },
   plugins: [new HtmlWebpackPlugin({ template: './dist/index.html' })],
   devServer: {
@@ -82,7 +81,7 @@ module.exports = {
 
 ```
 
-![image-20230621110535980](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230621110535980.png)
+![image-20230621110535980](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230621110535980.png) 
 
 
 
@@ -262,7 +261,7 @@ print({ x: 1, y: 2 })
 
 在ts使用过程中，我们可以定义`函数参数的类型`，也可以定义 `函数返回值的类型`，那么**函数自身也应该有类型**
 
-我们可以编写 `函数类型表达式`来**表示函数类型**
+我们可以通过`type`编写 `函数类型表达式`来**表示函数类型**
 
 ```ts
 (参数列表类型)=>返回值类型
@@ -279,7 +278,7 @@ const bar: BarType = (arg: number): number => {
 
 ## `函数调用签名` 
 
-**函数类型表达式声明的函数不能`支持额外声明属性`，如果想描述一个带有属性的函数，可以在一个对象类型中写一个 `调用签名`**
+**函数类型表达式声明的函数不能`支持额外声明属性`，如果想描述一个带有属性的函数，可以在`一个对象类型中`写一个 `调用签名`**
 
 ![image-20230807185245373](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807185245373.png)
 
@@ -1815,6 +1814,24 @@ bar<string>('1')
 
 ```
 
+**使用函数类型表达式**
+
+```ts
+export const getName = <T>(name: T): T => {
+    return name
+}
+```
+
+
+
+**注意：如果函数中要写对应的泛型参数，那么`不能通过type的方式定义函数类型`，只能在声明时定义。即以上两种方式。而且也确实没必要额外声明函数类型**
+
+![image-20230811152745169](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230811152745169.png) 
+
+
+
+
+
 
 
 ## 泛型接口和泛型类
@@ -1947,6 +1964,43 @@ export {}
 
 
 
+
+
+# TS扩展知识
+
+## TS模块化
+
+**js中两种模块化方式①commonJS  通过require导入，module.exports导出 ②es6的module import导入export导出**
+
+区别：
+
+- CommonJS 是同步加载模块的，即在运行时按需加载模块。ES6 是异步加载模块的，即在编译时静态解析模块的依赖关系，并在运行时动态加载和执行模块。
+- CommonJS 在导入模块时，会将整个模块的值复制并分配给变量，因此导入的是值的拷贝。ES6 模块在导入时，是动态地绑定到导出的模块，导入的是模块的引用。
+
+**在TypeScript中最主要使用的模块化方案就是ES Module**
+
+js规范声明 `没有export的js文件都被认为是一个脚本。脚本文件中，变量和类型会被声明在共享的全局作用域中`
+
+如果希望某个文件作为模块处理，只需要添加 `export {}`
+
+
+
+## 类型的查找
+
+**.d.ts文件：**用来做`类型的声明(declare)`，称之为 `类型声明文件`或者`类型定义`
+
+该文件一般不写逻辑代码，只有类型的声明。
+
+- [ ] 内置类型声明   
+- [ ] 外部定义类型声明  (第三方库)
+- [ ] 自己定义类型声明
+
+
+
+
+
+
+
 **映射类型的修饰符**
 
 在使用映射类型时，有两个额外的修饰符可能会用到：
@@ -1957,6 +2011,24 @@ export {}
 **还可以通过 - 或者 + 来实现修饰符的添加删除，如果没有写前缀，默认是 + **
 
 ![image-20230810163352623](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810163352623.png) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # TS内置符号
 
