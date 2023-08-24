@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            #custom-button {
+                position: relative;
+            }
+
+            #custom-button.loading::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 12px;
+                height: 12px;
+                border: 2px solid #000;
+                border-right-color: transparent;
+                border-radius: 50%;
+                animation: spin 1s infinite linear;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: translate(-50%, -50%) rotate(0deg);
+                }
+                100% {
+                    transform: translate(-50%, -50%) rotate(360deg);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <button id="custom-button" onclick="startLoading()">Submit</button>
+        <script>
+            function startLoading() {
+                var button = document.getElementById('custom-button')
+                button.classList.add('loading')
+
+                // 模拟异步操作
+                setTimeout(function () {
+                    stopLoading()
+                }, 2000)
+            }
+
+            function stopLoading() {
+                var button = document.getElementById('custom-button')
+                button.classList.remove('loading')
+            }
+        </script>
+    </body>
+</html>
