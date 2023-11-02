@@ -17,5 +17,6 @@ type Optional2<T, K extends keyof T> = {
 type B = Optional2<Person, 'age'>
 let b: B = {
     name: 'zds',
+    age: 12,
 }
 export {}
