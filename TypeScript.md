@@ -1,10 +1,11 @@
+---
+highlight: a11y-dark
+---
 # 为什么要有TS
 
 [TS入门教程](http://ts.xcatliu.com/basics/type-of-object-interfaces.html)
 
 因为我们需要`错误出现的越早越好`，能在写代码的时候发现错误，就不要在编译时发现。`能在编译时发现，就不要在运行期间`发现错误。
-
-
 
 js的类型缺失案例： `返回undefined`
 
@@ -17,27 +18,19 @@ console.log(getLength(1));  //undefined
 console.log(getLength());  //报错
 ```
 
-![image-20230620142740865](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230620142740865.png) 
-
-
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/afd3a7e40f5a44efb9883f0a2937ebcb~tplv-k3u1fbpfcp-zoom-1.image)
 
 # TS环境的搭建
 
-```
-npm install typescript -g   //tsc --version查看版本 
-npm install ts-node -g  
-```
+    npm install typescript -g   //tsc --version查看版本 
+    npm install ts-node -g  
 
 tsc将ts文件编译成js。ts-node编译后直接执行该js文件。
 
-
-
 方法二：通过webpack配置对应的loader
 
-```
-npm init -y  //生成package.json
-tsc --init   //生成tsconfig.json
-```
+    npm init -y  //生成package.json
+    tsc --init   //生成tsconfig.json
 
 ```js
 安装：npm install typescript ts-loader webpack webpack-cli webpack-dev-server html-webpack-plugin
@@ -81,9 +74,7 @@ module.exports = {
 
 ```
 
-![image-20230621110535980](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230621110535980.png) 
-
-
+![image-20230621110535980](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b344bd5d41fb439db4096e4a42786d28~tplv-k3u1fbpfcp-zoom-1.image)
 
 # js中通用类型的类型注解
 
@@ -95,10 +86,8 @@ console.log(z)
 
 **注意**：
 
-- `string`:TypeScript给我们定义标识符时，`即提供的字符串类型`
-- `String`：javascript中**字符串的包装类**   (类似于Date  let mess = new String('123'))
-
-
+*   `string`:TypeScript给我们定义标识符时，`即提供的字符串类型`
+*   `String`：javascript中**字符串的包装类**   (类似于Date  let mess = new String('123'))
 
 ## null和undefined
 
@@ -109,107 +98,103 @@ let a: null = null
 let b:undefined=undefined
 ```
 
-
-
 # 变量的类型推导
 
 > 在开发中，有时候为了方便，并不会在每个变量的后面添加类型注解。
 
 **声明一个变量时，如果有直接进行赋值，会根据赋值的类型推导出对应的类型注解**
 
-![image-20230621141052343](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230621141052343.png)
+![image-20230621141052343](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/074db2fbfa47440eb1aa64f08e459d0c~tplv-k3u1fbpfcp-zoom-1.image)
 
 类型推导的特点：
 
-- let进行类型推导，推导出来的是通用类型
-- const进行类型推导，推导出来的是`字面量类型`
+*   let进行类型推导，推导出来的是通用类型
+*   const进行类型推导，推导出来的是`字面量类型`
 
-![image-20230621141326445](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230621141326445.png)
-
-
+![image-20230621141326445](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e5a2153d9b0b4cde8100d3ef8d30d562~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 数组的类型注解
 
 如果直接给`数组赋值`的话，那么可以通过`类型推导`，推导出对应的类型注解。
 
-![image-20230621141647029](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230621141647029.png)
+![image-20230621141647029](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fe82bbd6978b49a389c4305994021d7f~tplv-k3u1fbpfcp-zoom-1.image)
 
 **注意：真实开发中，数组一般存放相同的类型，不要存放不同的类型**
 
 **明确的指定<数组>的类型注解:**
 
-- string[]
+*   string\[]
 
-  ```ts
-  let name: string[] = ['1', '2']
-  ```
+    ```ts
+    let name: string[] = ['1', '2']
+    ```
 
-- Array<string>   （泛型的写法）
+*   Array<string>   （泛型的写法）
 
-  ```ts
-  let name: Array<string> = ['1', '2']
-  ```
+    ```ts
+    let name: Array<string> = ['1', '2']
+    ```
 
-- 用接口表示数组(不常用)
+*   用接口表示数组(不常用)
 
-  ```ts
-  interface NumberArray {
-      [index: number]: number
-  }
-  let arr: NumberArray = [1, 2, 3]
-  ```
+    ```ts
+    interface NumberArray {
+        [index: number]: number
+    }
+    let arr: NumberArray = [1, 2, 3]
+    ```
 
-  虽然接口也可以用来描述数组，但是我们一般不会这么做，因为这种方式比前两种方式复杂多了。
+    虽然接口也可以用来描述数组，但是我们一般不会这么做，因为这种方式比前两种方式复杂多了。
 
-  不过有一种情况例外，那就是它常用来表示`类数组`。
+    不过有一种情况例外，那就是它常用来表示`类数组`。
 
-  类数组（Array-like Object）不是数组类型，比如 `arguments`：
+    类数组（Array-like Object）不是数组类型，比如 `arguments`：
 
-  ```ts
-  function sum() {
-      let args: number[] = arguments;
-  }
-  
-  // Type 'IArguments' is missing the following properties from type 'number[]': pop, push, concat, join, and 24 more.
-  ```
+    ```ts
+    function sum() {
+        let args: number[] = arguments;
+    }
+    
+    // Type 'IArguments' is missing the following properties from type 'number[]': pop, push, concat, join, and 24 more.
+    ```
 
-  上例中，`arguments` 实际上是一个类数组，不能用普通的数组的方式来描述，而应该用接口：
+    上例中，`arguments` 实际上是一个类数组，不能用普通的数组的方式来描述，而应该用接口：
 
-  ```ts
-  function sum() {
-      let args: {
-          [index: number]: number;
-          length: number;
-          callee: Function;
-      } = arguments;
-  }
-  ```
+    ```ts
+    function sum() {
+        let args: {
+            [index: number]: number;
+            length: number;
+            callee: Function;
+        } = arguments;
+    }
+    ```
 
-  在这个例子中，我们除了约束当索引的类型是数字时，值的类型必须是数字之外，也约束了它还有 `length` 和 `callee` 两个属性。
+    在这个例子中，我们除了约束当索引的类型是数字时，值的类型必须是数字之外，也约束了它还有 `length` 和 `callee` 两个属性。
 
-  事实上常用的类数组都有自己的接口定义，如 `IArguments`, `NodeList`, `HTMLCollection` 等：
+    事实上常用的类数组都有自己的接口定义，如 `IArguments`, `NodeList`, `HTMLCollection` 等：
 
-  ```ts
-  function sum() {
-      let args: IArguments = arguments;
-  }
-  ```
+    ```ts
+    function sum() {
+        let args: IArguments = arguments;
+    }
+    ```
 
-  其中 `IArguments` 是 TypeScript 中定义好了的类型，它实际上就是：
+    其中 `IArguments` 是 TypeScript 中定义好了的类型，它实际上就是：
 
-  ```ts
-  interface IArguments {
-      [index: number]: any;
-      length: number;
-      callee: Function;
-  }
-  ```
+    ```ts
+    interface IArguments {
+        [index: number]: any;
+        length: number;
+        callee: Function;
+    }
+    ```
 
 # 对象的类型注解
 
 和数组一样，如果直接给 `对象赋初始值`的话，那么可以通过`类型推导`，推导出对应的`类型注解`
 
-![image-20230621142238216](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230621142238216.png)
+![image-20230621142238216](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5bb39542473a4757b91dd75b8c454aba~tplv-k3u1fbpfcp-zoom-1.image)
 
 **明确的指定对象的类型注解：**
 
@@ -236,8 +221,6 @@ let info: object = {
 console.log(info.name);//会直接报错
 ```
 
-
-
 ## 对象类型的使用
 
 常常使用type来定义类型别名。
@@ -252,8 +235,6 @@ print({ x: 1, y: 2 })
 ```
 
 当然更常用的是[接口](#接口)
-
-
 
 # 函数的类型
 
@@ -274,13 +255,11 @@ const bar: BarType = (arg: number): number => {
 }
 ```
 
-
-
-## `函数调用签名` 
+## `函数调用签名`
 
 **函数类型表达式声明的函数不能`支持额外声明属性`，如果想描述一个带有属性的函数，可以在`一个对象类型中`写一个 `调用签名`**
 
-![image-20230807185245373](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807185245373.png)
+![image-20230807185245373](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c900246b0d5a44b5b489bd3240fe7d4f~tplv-k3u1fbpfcp-zoom-1.image)
 
 **函数调用签名(从对象的角度来看待这个函数，`既可以被调用，又可以新增额外属性`)**
 
@@ -301,11 +280,43 @@ fn2(1, 2)
 
 总结：如果只是描述函数类型，就用函数类型表达式，如果要给函数新增属性，且函数作为对象需要能被调用，那么用函数调用签名
 
-
-
 ## `构造签名`
 
-> 定义构造函数对应的类型  用的很少
+> 定义构造函数对应的类型，其实es6的类就是构造函数升级而来的。
+
+**构造签名的一般语法如下：**
+    
+```js
+    new (param1: type1, param2: type2, ...): ClassName;
+```
+
+**作用：构造签名在 TypeScript 中用于`描述类的构造函数类型`(当然类本身也是一种类型，但是`不好用来直接作为实例的类型`)，因此构造函数一般在`处理类实例的地方使用`，例如泛型约束、函数参数类型等。**
+
+**案例1**
+
+
+```js
+  class Person {
+  name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+
+  sayHello() {
+    console.log(`Hello, my name is ${this.name} and I'm ${this.age} years old.`);
+  }
+}
+
+type PersonConstructor = new (name: string, age: number) => Person;
+
+const personConstructor: PersonConstructor = Person;
+const person: Person = new personConstructor("John", 25);
+person.sayHello(); // 输出：Hello, my name is John and I'm 25 years old.
+
+```
 
 ```ts
 class Person {
@@ -329,26 +340,23 @@ interface IPerson {
 
 function createPerson(p: IPerson) {}
 
-
 ```
-
-
 
 ## **匿名函数作为参数**
 
 **重点：**
 
-- 匿名函数或箭头函数如果`作为函数的参数`，那么`匿名函数自己的参数和返回值无需定义类型，它会自动推导`
+*   匿名函数或箭头函数如果`作为函数的参数`，那么`匿名函数自己的参数和返回值无需定义类型，它会自动推导`
 
-- 如果某一个`函数的参数是函数，即回调函数形式`，那么ts不会对`回调函数定义的参数个数`进行校验，但是`调用的时候必须接受对应个数的参数了` （最经典的例子，forEach）
+*   如果某一个`函数的参数是函数，即回调函数形式`，那么ts不会对`回调函数定义的参数个数`进行校验，但是`调用的时候必须接受对应个数的参数了` （最经典的例子，forEach）
 
-  <a name='回调函数参数个数检验'>回调函数参数个数</a>  **回调函数中只定义一个参数，不报错 (按照函数类型来说需要两个)**
-  
-  ![image-20230808141657082](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808141657082.png)
-  
-  **但是如果定义多个，就会报错**
-  
-  ![image-20230808141949722](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808141949722.png)
+    <a name='回调函数参数个数检验'>回调函数参数个数</a>  **回调函数中只定义一个参数，不报错 (按照函数类型来说需要两个)**
+
+    ![image-20230808141657082](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9be96bf0ce494918885ec051255a8e9c~tplv-k3u1fbpfcp-zoom-1.image)
+
+    **但是如果定义多个，就会报错**
+
+    ![image-20230808141949722](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a3f40b0862714a71b29377cc6591c5ee~tplv-k3u1fbpfcp-zoom-1.image)
 
 ```ts
 type callbackType = (num1: number, num2: number) => number
@@ -362,9 +370,7 @@ fn(function (num1) {
 })
 ```
 
-
-
-##     参数类型(不可推导)
+## 参数类型(不可推导)
 
 在我们定义一个ts的`函数`时，我们必须明确的`指定参数的类型`。不然`默认是any类型`，会提示错误
 
@@ -374,19 +380,17 @@ function sum(num1: number, num2: number) {
 }
 ```
 
-##     返回值类型(可推导)
+## 返回值类型(可推导)
 
-> 返回值类型可以明确的指定，也可以通过类型推导推导出来~
+> 返回值类型可以明确的指定，也可以通过类型推导推导出来\~
 
 **因为指定了参数类型，函数的返回值类型是可以通过类型推导，推导出来**
 
-![image-20230621143301114](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230621143301114.png)
+![image-20230621143301114](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/daa81baee6d7438abe84b1151cd3e1de~tplv-k3u1fbpfcp-zoom-1.image)
 
 **明确的指定返回值的类型注解**
 
-![image-20230621143404589](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230621143404589.png)
-
-
+![image-20230621143404589](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc1532836d3d4a1ea2be558403aedb71~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## 回调函数的参数类型
 
@@ -402,11 +406,9 @@ name.forEach((item: string, index: number, arr) => {
 
 因为forEach接受回调函数作为参数的时候，已经写明了它需要的类型。
 
-![image-20230621144212412](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230621144212412.png)
+![image-20230621144212412](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6e2271a866184811a3457008d42d6609~tplv-k3u1fbpfcp-zoom-1.image)
 
 这个过程称为`上下文类型`，因为函数执行的上下文可以帮助确定参数和返回值的类型。
-
-
 
 **重点②：回调函数的参数个数是不会被ts所检验的**，**但是调用的时候需要传正确的参数**
 
@@ -471,13 +473,11 @@ mySearch = function(source: string, subString: string) {
 
 采用函数表达式|接口定义函数的方式时，对等号左侧进行类型限制，可以保证以后对函数名赋值时保证参数个数、参数类型、返回值类型不变。
 
-
-
 ## 可选参数
 
 可选参数的类型：`默认是联合类型` **xx|undefined**
 
-![image-20230808150210325](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808150210325.png)
+![image-20230808150210325](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5cc16343e4334d9a9698e6e4d90e1382~tplv-k3u1fbpfcp-zoom-1.image)
 
 所以使用可选参数的时候，必须进行`类型缩小`
 
@@ -514,8 +514,6 @@ let tomcat = buildName('Tom', 'Cat');
 let cat = buildName(undefined, 'Cat'); //但是注意，第一个参数还是要传undefined的，因为不传是undefined
 ```
 
-
-
 **有默认值的参数，是可以接受一个undefined的值，写了无效而已**
 
 ```ts
@@ -525,7 +523,7 @@ function fn(x: number, y = 100) {
 console.log(fn(1, undefined))
 ```
 
-![image-20230808150809167](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808150809167.png)
+![image-20230808150809167](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/565e595f14c1471c88b420eb3460281d~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## 剩余参数
 
@@ -557,8 +555,6 @@ push(a, 1, 2, 3);
 
 注意，rest 参数只能是最后一个参数
 
-
-
 ## 函数重载
 
 重载允许一个函数接受不同数量或类型的参数时，作出不同的处理。
@@ -579,8 +575,6 @@ function reverse(x: number | string): number | string | void {
 
 **然而这样有一个缺点，就是不能够精确的表达，还需要进行类型缩小**
 
-
-
 > 在ts中，我们可以`编写不同的重载签名，以表示不同的方式进行调用，然后编写通用的函数实现`
 
 ```ts
@@ -596,9 +590,7 @@ add(1,2) // √
 add(1,'2')// ×
 ```
 
-![image-20230808152106913](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808152106913.png)
-
-
+![image-20230808152106913](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4515d999f7304a56a57faf3903503983~tplv-k3u1fbpfcp-zoom-1.image)
 
 **函数重载和联合类型的对比**
 
@@ -619,17 +611,13 @@ function getLength(str: string | any[]) {
 
 ```
 
-
-
-
-
 ## 函数中的this
 
 在vue3的composition api和react的hook中，this已经很少见了，但是我们封装一些库函数，可能函数需要this的
 
 > 如果没有对ts进行特殊配置，那么this默认是any类型的。如果开启了会提示错误(默认是关闭的)
 >
-> ![image-20230808160555905](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808160555905.png) 
+> ![image-20230808160555905](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/87badf099a25473b85b7e41b4e8f13bf~tplv-k3u1fbpfcp-zoom-1.image)
 
 ```ts
 //1.对象方法中的this
@@ -649,25 +637,21 @@ function foo() {
 }
 ```
 
-
-
 **手动指定this类型 (用call或者apply)**
 
 首先需要开启配置  noImplicitThis
 
-- 函数的`第一个参数名字必须叫this`，可以`根据函数被调用的情况`，用于**声明this的类型**
-- 后续调用函数传入参数时，从第二个参数开始传递
+*   函数的`第一个参数名字必须叫this`，可以`根据函数被调用的情况`，用于**声明this的类型**
+*   后续调用函数传入参数时，从第二个参数开始传递
 
-```
-function foo(this: { name: string }, obj: { name: string }) {
-    console.log(this)  //{name:'zds'}
-}
-foo.call({ name: 'zds' }, { name: 'xqq' })
-```
+<!---->
 
-  
+    function foo(this: { name: string }, obj: { name: string }) {
+        console.log(this)  //{name:'zds'}
+    }
+    foo.call({ name: 'zds' }, { name: 'xqq' })
 
-##  函数总结
+## 函数总结
 
 定义函数类型的方式：
 
@@ -693,8 +677,6 @@ const fn: IFn = (x: number) => {}
 fn.name = 'zds'
 ```
 
-
-
 # 类
 
 ## 基础用法
@@ -715,17 +697,13 @@ let p1 = new Person('zds', 12)
 
 如果不定义类型，默认是any
 
-![image-20230808164451278](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808164451278.png) 
-
-
+![image-20230808164451278](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/909c02f4beab4cf7874a943ee53a6831~tplv-k3u1fbpfcp-zoom-1.image)
 
 **类的作用**
 
-- **创建出类的实例对象**
-- `类本身作为实例的类型`
-- **类也可以当作一个有`构造签名`的函数**
-
-
+*   **创建出类的实例对象**
+*   `类本身作为实例的类型`
+*   **类也可以当作一个有`构造签名`的函数，即也可认为是构造函数类型**
 
 ## 类的继承  extends
 
@@ -749,20 +727,14 @@ class Cat extends Animal {
 
 ```
 
-
-
 ## 类的修饰符
 
-| 修饰符    | 作用范围                                                     |
-| --------- | ------------------------------------------------------------ |
+| 修饰符       | 作用范围                                        |
+| --------- | ------------------------------------------- |
 | public    | 任何地方(实例、当前类、子类)都可见、公有的属性或方法，默认编写的属性就是public |
 | private   | 仅在`同一类中可见`、`私有的属性或方法`                       |
-| protected | 仅在**自身**和**子类中可见**、受保护的属性或方法             |
-| readonly  | **只读属性**，不能修改                                       |
-
-
-
-
+| protected | 仅在**自身**和**子类中可见**、受保护的属性或方法                |
+| readonly  | **只读属性**，不能修改                               |
 
 ## 类的存取器
 
@@ -790,8 +762,6 @@ let p = new Person('zds')
 console.log(p.name)
 export {}
 ```
-
-
 
 ## 类的参数属性
 
@@ -829,16 +799,14 @@ console.log(p.name)
 export {}
 ```
 
-
-
 ## 抽象类 abstract（了解即可）
 
-****
+***
 
 **什么是抽象方法？**
 
-- [ ] 抽象方法，必须`存在于抽象类中`
-- [ ] 抽象类是用`abstract声明的类`
+*   [ ] 抽象方法，必须`存在于抽象类中`
+*   [ ] 抽象类是用`abstract声明的类`
 
 **特点：抽象方法在抽象类中只有声明，没有实现体。子类必须实现抽象方法的实现体**
 
@@ -875,37 +843,31 @@ function calcArea(shape: Shape) {}
 
 ```
 
-
-
 ## 抽象类和接口的区别(了解即可)
 
 **相同点：**
 
-- 都可以在其中定义方法，让子类或者实现类实现
+*   都可以在其中定义方法，让子类或者实现类实现
 
 **不同点**
 
-- 抽象类中的方法称为抽象方法，**只有声明没有实现体**，需要在子类中实现。接口则可以用来描述对象或类的属性和行为
-- 抽象类是由**子类继承**的，接口可以直接作为对象的类型注解，也可以由类来implement
-- `接口可以重复定义，实现该接口的时候必须符合所有接口特性`，抽象类和type都不可以重复定义
-
-
+*   抽象类中的方法称为抽象方法，**只有声明没有实现体**，需要在子类中实现。接口则可以用来描述对象或类的属性和行为
+*   抽象类是由**子类继承**的，接口可以直接作为对象的类型注解，也可以由类来implement
+*   `接口可以重复定义，实现该接口的时候必须符合所有接口特性`，抽象类和type都不可以重复定义
 
 ## TS中类型检测--鸭子类型
 
 用ts的时候，会发现一种很奇怪的事情,明明函数参数要求传入的是Person类型，但是我直接传了一个相似对象，居然也不报错
 
-![image-20230809160713104](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809160713104.png) 
+![image-20230809160713104](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/09b7881cf53f472a8b5b9902981a734b~tplv-k3u1fbpfcp-zoom-1.image)
 
 **原因：TS类型检测时，使用的是`鸭子类型`**。鸭子类型`只关心属性和行为`，不关心具体是不是那个类型。
 
 如下：**getPerson只关心传入的参数对象有没有name属性，有没有age属性，如果传入的对象有对应属性，那就认为是`同一只鸭子`**。
 
-![image-20230809161130238](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809161130238.png) 
+![image-20230809161130238](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/54f10f01fdf84ea28629c638cb7c725e~tplv-k3u1fbpfcp-zoom-1.image)
 
-![image-20230809161547795](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809161547795.png) 
-
-
+![image-20230809161547795](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/98d0f4aa17694c7d9b5c78decca7d6f7~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## 类实现接口
 
@@ -952,18 +914,16 @@ class Person implements IKun, IRun {
 let p = new Person('zds', '12', 'xx', 'fly')
 ```
 
+# TS扩展的类型
 
-
-# TS扩展的类型 
-
-##   any类型 
+## any类型
 
 （使用any并不可耻,但不要处处用❤❤❤❤❤）
 
- **any类型是一种讨巧的TypeScript手段**，相当于回到了javascript
+**any类型是一种讨巧的TypeScript手段**，相当于回到了javascript
 
-- 我们可以对`any类型的变量进行任何的操作`，包括`获取不存在的属性、方法`
-- 我们也可以对一个`any类型的变量赋值任何的值、比如数字、字符串等等`
+*   我们可以对`any类型的变量进行任何的操作`，包括`获取不存在的属性、方法`
+*   我们也可以对一个`any类型的变量赋值任何的值、比如数字、字符串等等`
 
 **在某些情况下，我们确实`无法确定一个变量的类型`，并且可能`它会发生一些变化`，这个时候我们可以使用`any类型`**
 
@@ -984,15 +944,13 @@ let people: People = {
 
 ​				    ②`引入一些第三方库时，缺失了类型注解`
 
-
-
-##  unknown类型
+## unknown类型
 
 **unknown是ts中特殊的一种类型，它用于描述类型不确定的变量**
 
-- [ ] 和any类型有点类似，但是`对unknown类型的值直接操作是非法`的，需要进行`类型缩小`！ （any类型是合法的）
+*   [ ] 和any类型有点类似，但是`对unknown类型的值直接操作是非法`的，需要进行`类型缩小`！ （any类型是合法的）
 
-![image-20230621151559970](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230621151559970.png)![image-20230621151606572](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230621151606572.png)
+![image-20230621151559970](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fdcbe7b6e117486fa80eb1c012044753~tplv-k3u1fbpfcp-zoom-1.image)![image-20230621151606572](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df40ac4817fd48d19313d5cbcb2f14af~tplv-k3u1fbpfcp-zoom-1.image)
 
 **因此，unknown类型默认情况下，进行任何操作都需要进行类型缩小,才能根据缩小后的类型，进行对应的操作**
 
@@ -1004,10 +962,6 @@ if(typeof foo==='string'){
     console.log(foo.length);
 }
 ```
-
-
-
-
 
 ## void类型
 
@@ -1023,9 +977,7 @@ function fn(): void {
 }
 ```
 
-![image-20230621160555105](C:\Users\01427334\AppData\Roaming\Typora\typora-user-images\image-20230621160555105.png) 
-
-
+![image-20230621160555105转存失败，建议直接上传图片文件](C:\Users\01427334\AppData\Roaming\Typora\typora-user-images\image-20230621160555105.png)
 
 ## never类型
 
@@ -1043,8 +995,6 @@ foo()
 
 ```
 
-
-
 ## 联合类型
 
 **联合类型表示`取值`可以为`多种类型中的一种`，使用 `|` 分隔每个类型。**
@@ -1056,7 +1006,7 @@ num = '123'
 
 <a name='联合类型的问题'>**注意：当TypeScript不确定一个联合类型的变量到底是哪个类型的时候，`只能访问联合类型中所有类型的共有属性和方法`**</a>
 
-![image-20230625153912596](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230625153912596.png) 
+![image-20230625153912596](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/754233fa277a47e09e9493d68968bae1~tplv-k3u1fbpfcp-zoom-1.image)
 
 上例中，`length` 不是 `string` 和 `number` 的共有属性，所以会报错。
 
@@ -1070,9 +1020,9 @@ function getString(something: string | number): string {
 
 **最常见的：`获取DOM元素后，获取其属性`**
 
-![image-20230807155941400](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807155941400.png) 
+![image-20230807155941400](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1cbf67315a35432081bfea29a9c63e68~tplv-k3u1fbpfcp-zoom-1.image)
 
-![image-20230807155959497](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807155959497.png) 
+![image-20230807155959497](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d2465c9c9614d4bb61e375b24728854~tplv-k3u1fbpfcp-zoom-1.image)
 
 **联合类型的变量在被赋值的时候，会根据赋的值进行类型推导，`推导出变量的类型注解`**
 
@@ -1085,15 +1035,13 @@ console.log(myFavoriteNumber.length); // 编译时报错
 
 ```
 
-
-
-## 交叉类型 
+## 交叉类型
 
 **交叉类型表示 `多种类型同时满足`**
 
 ts中不可能同时是number和string类型，因此返回never类型，无意义
 
-![image-20230807154752285](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807154752285.png) 
+![image-20230807154752285](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8ba5ef7d0ea9479080686389cb6eafac~tplv-k3u1fbpfcp-zoom-1.image)
 
 交叉类型主要用于对象类型
 
@@ -1115,11 +1063,9 @@ const info: IKun & ICoder = {
 
 ```
 
-
-
 ## **枚举类型**
 
-**语法:** 
+**语法:**
 
 ```ts
 enum Direction {
@@ -1140,8 +1086,6 @@ function turnDirection(direction: Direction) {
 turnDirection(Direction.UP)
 ```
 
-
-
 **枚举类型的默认值**
 
 枚举成员默认会`被赋值为从0开始递增的数字`
@@ -1152,11 +1096,7 @@ enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};  0 1 2 3...
 
 也可以手动赋值，**未手动赋值的枚举型会跟着上一个枚举的值递增**
 
-```
-enum Days {Sun = 7, Mon = 1, Tue, Wed, Thu, Fri, Sat};  //Tue:2 Wed:3...
-```
-
-
+    enum Days {Sun = 7, Mon = 1, Tue, Wed, Thu, Fri, Sat};  //Tue:2 Wed:3...
 
 ## type
 
@@ -1171,8 +1111,6 @@ type CoordinateType = {
 function printCoordinate(point: CoordinateType) {}
 printCoordinate({ x: 1, y: 2 })
 ```
-
-
 
 ## interface
 
@@ -1213,8 +1151,6 @@ let tom: Person = {
 ```
 
 这时**仍然`不允许添加未定义的属性`**：
-
-
 
 **任意属性**
 
@@ -1270,8 +1206,6 @@ let tom: Person = {
 };
 ```
 
-
-
 **只读属性**
 
 有时候我们希望对象中的一些字段只能在创建的时候被赋值，那么可以用 `readonly` 定义只读属性：
@@ -1323,20 +1257,14 @@ tom.id = 89757;
 
 第二处是在给 `tom.id` 赋值的时候，由于它是只读属性，所以报错了。
 
-
-
 **接口的继承特性**
 
 > 可以从别的接口继承相关属性类型
 
 **作用：**
 
-- **减少相同代码重复编写**
-- **如果使用第三方库，第三方库定义了对应类型，我们希望能添加一些额外类型，就可以用接口继承**
-
-**注意：`接口只能继承于另一个接口`！！！ ** 
-
-**<T extends {length:number}>这是泛型约束！！虽然效果和接口继承很像，但是代表了泛型必须满足要有属性length，键值为number**
+*   **减少相同代码重复编写**
+*   **如果使用第三方库，第三方库定义了对应类型，我们希望能添加一些额外类型，就可以用接口继承**
 
 ```ts
 interface IPerson {
@@ -1356,32 +1284,25 @@ const ikun: IKun = {
 
 ```
 
-
-
-
-
 ## type和interface的区别
 
 相同点：`类型别名和接口非常相似`，在**定义对象类型**时，`大部分情况下，用法相同`
 
 不同点：
 
-- **type可以用来声明基本类型、联合类型、交叉类型，`接口只能用来声明对象的类型`**
+*   **type可以用来声明基本类型、联合类型、交叉类型，`接口只能用来声明对象的类型`**
 
-- **声明对象时，type不可以重复声明对应的类型别名，`interface可以多次重复声明且多次声明都有效，必须同时满足` （而且后序属性声明必须属于同一类型，比如第一个interface{x:number},第二个{x:string}会报错）**
-- **interface支持继承，也可以被类实现implements**
+*   **声明对象时，type不可以重复声明对应的类型别名，`interface可以多次重复声明且多次声明都有效，必须同时满足` （而且后序属性声明必须属于同一类型，比如第一个interface{x:number},第二个{x:string}会报错）**
+
+*   **interface支持继承，也可以被类实现implements**
 
 > 总结：type的范围更广，可以声明基本类型也可以声明对象类型。interface虽然只能声明对象类型，但是它有很多及其好用的特性。比如重复声明需同时满足，比如继承等。`如果定义非对象类型(联合类型，交叉类型)，用type，定义对象类型用interface`
 
-![image-20230807153218354](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807153218354.png) 
+![image-20230807153218354](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3a4f408e9f034723a68f3fb3bec1ef3d~tplv-k3u1fbpfcp-zoom-1.image)
 
-![image-20230807153340452](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807153340452.png) 
+![image-20230807153340452](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/56c49b193457430c8f1b22d300554b9c~tplv-k3u1fbpfcp-zoom-1.image)
 
-
-
-![image-20230807153513128](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807153513128.png)
-
-
+![image-20230807153513128](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a5451d634b74e1f8fa013a844218581~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## 类型断言 as
 
@@ -1393,21 +1314,19 @@ const ikun: IKun = {
 
 #### 断言具体类型
 
-- [ ] 比如，我们通过document.getElementById,ts只知道**该函数会返回HTMLElement**，`并不知道它具体的类型`，这时候就可以使用类型断言。
+*   [ ] 比如，我们通过document.getElementById,ts只知道**该函数会返回HTMLElement**，`并不知道它具体的类型`，这时候就可以使用类型断言。
 
-  `要求：必须当前元素存在，且明确它的类型`。
+    `要求：必须当前元素存在，且明确它的类型`。
 
-  因为类型断言只能够「欺骗」TypeScript 编译器，无法避免运行时的错误，反而滥用类型断言可能会导致运行时错误
+    因为类型断言只能够「欺骗」TypeScript 编译器，无法避免运行时的错误，反而滥用类型断言可能会导致运行时错误
 
-  [错误案例](#类型断言)
+    [错误案例](#类型断言)
 
-  ```ts
-  //确定当前元素存在同时确定它的类型
-  const imgUrl = document.querySelector('.img') as HTMLImageElement
-  console.log(imgUrl.src)
-  ```
-
-  
+    ```ts
+    //确定当前元素存在同时确定它的类型
+    const imgUrl = document.querySelector('.img') as HTMLImageElement
+    console.log(imgUrl.src)
+    ```
 
 #### 将一个联合类型断言为其中一个类型
 
@@ -1489,8 +1408,6 @@ Uncaught TypeError: animal.swim is not a function`
 
 总之，使用类型断言时一定要格外小心，尽量避免断言后调用方法或引用深层属性，以减少不必要的运行时错误。
 
-
-
 #### 将任何一个类型断言为any (不要乱用)
 
 当我们引用一个在此类型上不存在的属性或方法时，就会报错：
@@ -1521,8 +1438,6 @@ window.foo = 1;
 
 需要注意的是，将一个变量断言为 `any` 可以说是解决 TypeScript 中类型问题的**最后一个手段**。
 
-
-
 #### 将 `any` 断言为一个具体的类型
 
 举例来说，历史遗留的代码中有个 `getCacheData`，它的返回值是 `any`：
@@ -1551,22 +1466,18 @@ tom.run();
 
 上面的例子中，我们调用完 `getCacheData` 之后，立即将它断言为 `Cat` 类型。这样的话明确了 `tom` 的类型，后续对 `tom` 的访问时就有了代码补全，提高了代码的可维护性。
 
-
-
 总结：类型断言的作用：
 
-- 将一个联合类型断言为其中的一个类型
-- 父类断言为子类
-- 任何类型可以被断言为any
-- any可以被断言为具体的类型
+*   将一个联合类型断言为其中的一个类型
+*   父类断言为子类
+*   任何类型可以被断言为any
+*   any可以被断言为具体的类型
 
 类型断言只能用来**欺骗TypeScript的编译器**，它并**不会影响到变量**真正的类型
 
-
-
 ## 非空类型断言 !
 
-**？ 可选链：属性读取，如果为空，直接返回 `undefined`**  
+**？ 可选链：属性读取，如果为空，直接返回 `undefined`**
 
 ```ts
 interface IPerson {
@@ -1588,34 +1499,26 @@ console.log(p1.friend?.name) //undefined
 
 ```
 
- 
-
-
-
 **但是属性赋值是不能用可选链**
 
-![image-20230807171228511](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807171228511.png) 
+![image-20230807171228511](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fee204ab01e441279ce89fc230175ba1~tplv-k3u1fbpfcp-zoom-1.image)
 
 **解决措施**
 
-- 类型缩小 
+*   类型缩小
 
-  ```
-  if (p1.friend) {
-      p1.friend.name = 'zds'
-  }
-  ```
+        if (p1.friend) {
+            p1.friend.name = 'zds'
+        }
 
-- 非空断言!
+*   非空断言!
 
-  ```ts
-  // 强制告诉ts编译器不为空,但只是欺骗编译器，如果它还是空的话会报错
-  p1.friend!.name = 'zds'
-  ```
+    ```ts
+    // 强制告诉ts编译器不为空,但只是欺骗编译器，如果它还是空的话会报错
+    p1.friend!.name = 'zds'
+    ```
 
-  **只有我们`确定传入的参数是有值的`，我们才能用非空类型断言，它`只是跳过ts在编译阶段对它的检测`**。**所以最好还是用类型缩小**
-
-
+    **只有我们`确定传入的参数是有值的`，我们才能用非空类型断言，它`只是跳过ts在编译阶段对它的检测`**。**所以最好还是用类型缩小**
 
 ## 字面量类型
 
@@ -1638,26 +1541,22 @@ function request(url: string, method: RequestMethod) {}
 request('http://cs', 'DELETE')
 ```
 
-
-
 **一个细节问题**
 
-```
-const testInfo = {
-    url: 'xxx',
-    method: 'post'
-}
-request(testInfo.url, testInfo.method) //会报错
-```
+    const testInfo = {
+        url: 'xxx',
+        method: 'post'
+    }
+    request(testInfo.url, testInfo.method) //会报错
 
-![image-20230807174538978](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807174538978.png) 
+![image-20230807174538978](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/533e48bf38dc481cb6729b8b6b0e519d~tplv-k3u1fbpfcp-zoom-1.image)
 
 **因为testInfo.method类型是string类型**
 
 解决办法：
 
-- **request(testInfo.url, testInfo.method as “POST”)**  类型断言，断言它是**“POST”字面量类型**
-- **testInfo添加类型注解**
+*   **request(testInfo.url, testInfo.method as “POST”)**  类型断言，断言它是\*\*“POST”字面量类型\*\*
+*   **testInfo添加类型注解**
 
 ```ts
 const testInfo: { url: string; method: RequestMethod } = {
@@ -1665,8 +1564,6 @@ const testInfo: { url: string; method: RequestMethod } = {
     method: 'POST'
 }
 ```
-
-
 
 **`字面量类型特殊写法`**  **将值变为可读，且类型是字面量**
 
@@ -1677,9 +1574,7 @@ const info2 = {
 } as const
 ```
 
-![image-20230807175027200](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807175027200.png) 
-
-
+![image-20230807175027200](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8eeaaadd05e6415fb172d003fd7bbb50~tplv-k3u1fbpfcp-zoom-1.image)
 
 ### 严格的字面量赋值检测:imp:
 
@@ -1687,29 +1582,19 @@ const info2 = {
 
 如果`对象字面量赋值`中的属性不在接口中出现会报错，这个很正常
 
+![image-20230809172728020](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8d2d7eb081db41c7a8a52ba7e8f4b0ce~tplv-k3u1fbpfcp-zoom-1.image)   <a name='fresh'>新鲜</a>![image-20230809172759169](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1b2b67d9239149b19df9a2ad46b3b72a~tplv-k3u1fbpfcp-zoom-1.image)
 
+\*\*但是，如果用一个变量暂存，它就不报错了 \*\*<a name='扩散'>对象字面量被扩散到变量p上</a>
 
-![image-20230809172728020](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809172728020.png)   <a name='fresh'>新鲜</a>![image-20230809172759169](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809172759169.png)
+![image-20230809172840145](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ecf73ec8104044a288932ba86684c497~tplv-k3u1fbpfcp-zoom-1.image)
 
-
-
-**但是，如果用一个变量暂存，它就不报错了 **<a name='扩散'>对象字面量被扩散到变量p上</a>
-
-![image-20230809172840145](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809172840145.png) 
-
- **解释：**
+**解释：**
 
 > 第一次创建的对象字面量，称之为fresh([新鲜的](#fresh))，`对于新鲜的字面量，会进行严格的类型检测`，必须`完全满足类型的要求`(不能多或少于接口属性)
 
->当类型断言或当 [对象字面量扩散](#扩散) 的时候 ，就不进行严格检测，新鲜度消失。**但是得注意，如果想要获取对应的值(但是接口里没有定义)，ts还是会报错的**
+> 当类型断言或当 [对象字面量扩散](#扩散) 的时候 ，就不进行严格检测，新鲜度消失。**但是得注意，如果想要获取对应的值(但是接口里没有定义)，ts还是会报错的**
 >
->![image-20230809173901878](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809173901878.png) 
-
- 
-
-
-
-
+> ![image-20230809173901878](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/612ba03d5c1e492896265dfd998887f5~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## 类型缩小
 
@@ -1719,7 +1604,7 @@ const info2 = {
 
 使用场景：**[注意：当TypeScript不确定一个联合类型的变量到底是哪个类型的时候，`只能访问联合类型中所有类型的共有属性和方法`](#联合类型的问题)**
 
-![image-20230807175909935](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230807175909935.png) 
+![image-20230807175909935](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/95b5fd649283408fbae35affe042d96a~tplv-k3u1fbpfcp-zoom-1.image)
 
 解决方案：
 
@@ -1737,8 +1622,6 @@ function printId(id: string | number) {
 }
 
 ```
-
-
 
 ## 索引签名
 
@@ -1763,9 +1646,9 @@ let tom: Person = {
 
 需要注意的是，**一旦定义了任意属性，那么`确定属性和可选属性的类型都必须是它的类型的子集`**
 
-**注意点：在js中，对象[变量]无论传入什么，最后都会被转化为字符串**
+**注意点：在js中，对象\[变量]无论传入什么，最后都会被转化为字符串**
 
-![image-20230809174639618](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809174639618.png)![image-20230809174645624](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230809174645624.png)
+![image-20230809174639618](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ac97e93d6b2341b49c4daae1ccc4e799~tplv-k3u1fbpfcp-zoom-1.image)![image-20230809174645624](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/32896cd3776e446999f5d6dbbc160638~tplv-k3u1fbpfcp-zoom-1.image)
 
 **而在ts中，索引签名只能是`number|string`**
 
@@ -1780,15 +1663,11 @@ console.log(nums[0])
 
 ```
 
-![image-20230810144144320](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810144144320.png) 
+![image-20230810144144320](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f752dca38f40464084d53ee32ce2af7b~tplv-k3u1fbpfcp-zoom-1.image)
 
 如果分别定义了两个索引签名(),**注意数字类型的索引签名必须是字符串类型的子集**
 
-![image-20230810144256012](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810144256012.png) ![image-20230810144304579](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810144304579.png)
-
-
-
-
+![image-20230810144256012](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/74cf951681a742d6b2cb63a20e067add~tplv-k3u1fbpfcp-zoom-1.image) ![image-20230810144304579](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5466662680c54b65b4842679c7b129da~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 泛型
 
@@ -1798,11 +1677,11 @@ console.log(nums[0])
 
 ## **作用和语法**
 
- `类型参数化，即将参数的类型也变为一个参数使用`
+`类型参数化，即将参数的类型也变为一个参数使用`
 
 > 例如我想实现一个传入什么类型，返回值就什么类型的函数，可以用函数重载实现，但是每次多个类型都要写个重载签名，太麻烦了
 >
-> ![ ](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810151605408.png) 
+> ![ ](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/de5c02c65d40468d8ad9f4f42ab2630c~tplv-k3u1fbpfcp-zoom-1.image)
 
 而泛型就可以轻松的实现`类型参数化`。
 
@@ -1824,17 +1703,9 @@ export const getName = <T>(name: T): T => {
 }
 ```
 
-
-
 **注意：如果函数中要写对应的泛型参数，那么`不能通过type的方式定义函数类型`，只能在声明时定义。即以上两种方式。而且也确实没必要额外声明函数类型**
 
-![image-20230811152745169](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230811152745169.png) 
-
-
-
-
-
-
+![image-20230811152745169](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2ba708a0f98347e4bba8bf59fa331771~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## 泛型接口和泛型类
 
@@ -1857,9 +1728,7 @@ const kunkun: IKun<string> = {
 
 **泛型接口还可以含有`默认值`，有默认值就无需指定泛型接口的参数了**
 
-![image-20230810154350394](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810154350394.png) 
-
-
+![image-20230810154350394](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ea2fbbe7f6224d33b8b39e85e990373f~tplv-k3u1fbpfcp-zoom-1.image)
 
 **泛型类：**
 
@@ -1877,43 +1746,33 @@ const p2 = new Point('3', '4')
 
 ```
 
-
-
-
-
-
-
-## 泛型约束  extends
+## 泛型约束
 
 `泛型约束：传入的类型必须要有这个属性，也可以有其他属性，但是必须至少有这个成员!`
 
 **泛型约束使用**
 
-- [ ] 有时候，我们希望传入的类型有某些共性，但是这些共性不是在同一种类型中
+*   [ ] 有时候，我们希望传入的类型有某些共性，但是这些共性不是在同一种类型中
 
-- [ ] 比如string和array都有length，或者某些对象也是有length
+*   [ ] 比如string和array都有length，或者某些对象也是有length
 
-  那么**要求拥有length的属性都可以作为我们的参数类型**
+    那么**要求拥有length的属性都可以作为我们的参数类型**
 
-  > 最初，将Ilength类型赋值给参数，但这会导致两个问题，一个是返回的a、b会丢失类型，他们不再是原始的number[]，而都变成了ILength类型。其次，要求是对象含有length属性，而不是对象只能有length属性
+    > 最初，将Ilength类型赋值给参数，但这会导致两个问题，一个是返回的a、b会丢失类型，他们不再是原始的number\[]，而都变成了ILength类型。其次，要求是对象含有length属性，而不是对象只能有length属性
 
-  ![image-20230810160002407](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810160002407.png)
-
-
+    ![image-20230810160002407](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3022f12f84dc4b428eef6e0daccb9a42~tplv-k3u1fbpfcp-zoom-1.image)
 
 **泛型约束写法**
 
 `Type相当于一个变量，用于记录本次调用时传入的类型，所以在整个函数的执行期间，一直保留着对应的类型`
 
-![image-20230810160152866](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810160152866.png) 
+![image-20230810160152866](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6d3a700464e74d59a22a8c6aeb6e24c3~tplv-k3u1fbpfcp-zoom-1.image)
 
 `泛型约束：传入的类型必须要有这个属性，也可以有其他属性，但是必须至少有这个成员!`
 
-
-
 **案例2：传入一个对象和key，并定义相应类型**
 
-- 首先，可以**声明一个类型参数**，这个类型参数被其他类型参数约束
+*   首先，可以**声明一个类型参数**，这个类型参数被其他类型参数约束
 
 ```ts
 function getObjectProperty<O, K extends keyof O>(obj: O, key: K) {
@@ -1937,303 +1796,732 @@ const name = getObjectProperty<IInfo, 'name' | 'age'>(info, 'age')
 export {}
 ```
 
-
-
 # 映射类型
 
 > 使用场景：一个类型需要基于另一个类型，但是又不想直接复制粘贴一份，就可以使用映射类型
 
-- **映射类型建立在索引签名的语法上**
+*   **映射类型建立在索引签名的语法上**
 
-- **映射类型本质上是`使用了propertyKeys联合类型的泛型`**
+*   **映射类型本质上是`使用了propertyKeys联合类型的泛型`**
 
-- **其中propertyKeys通过keyof创建，然后通过in循环遍历创建对应键名的类型**
+*   **其中propertyKeys通过keyof创建，然后通过in循环遍历创建对应键名的类型**
 
-  ```ts
-  type MapPerson<Type> = {
-      [Property in keyof Type]: Type[Property]
-  }
-  
-  interface IPerson {
-      name: string
-      age: number
-  }
-  
-  type MyPerson = MapPerson<IPerson>
-  
-  export {}
-  ```
-
-
-
-**映射类型的修饰符**
-
-在使用映射类型时，有两个额外的修饰符可能会用到：
-
-- [ ] 一个是readonly，用于设置属性只读
-- [ ] 一个是 ? ,用于设置属性可选
-
-**还可以通过 - 或者 + 来实现修饰符的添加删除，如果没有写前缀，默认是 + **
-
-![image-20230810163352623](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230810163352623.png) 
-
-
+    ```ts
+    type MapPerson<Type> = {
+        [Property in keyof Type]: Type[Property]
+    }
+    
+    interface IPerson {
+        name: string
+        age: number
+    }
+    
+    type MyPerson = MapPerson<IPerson>
+    
+    export {}
+    ```
 
 # TS扩展知识
 
 ## TS模块化
 
-**js中两种模块化方式①commonJS  通过require导入，module.exports导出 ②es6的module import导入export导出**
+**js中两种模块化方式**
+
+**①commonJS 通过`require`导入，`module.exports`导出**
+
+**②es6的module import导入export导出,TS中最主要使用的就是`ES Module`(虽然也支持commonjs,但是推荐ES Module)**
 
 区别：
 
-- CommonJS 是同步加载模块的，即在运行时按需加载模块。ES6 是异步加载模块的，即在编译时静态解析模块的依赖关系，并在运行时动态加载和执行模块。
-- CommonJS 在导入模块时，会将整个模块的值复制并分配给变量，因此导入的是值的拷贝。ES6 模块在导入时，是动态地绑定到导出的模块，导入的是模块的引用。
+*   CommonJS 是同步加载模块的，即在运行时按需加载模块。ES6 是异步加载模块的，即在编译时静态解析模块的依赖关系，并在运行时动态加载和执行模块。
+*   CommonJS 在导入模块时，会将整个模块的值复制并分配给变量，因此导入的是值的拷贝。ES6 模块在导入时，是动态地绑定到导出的模块，导入的是模块的引用。
 
-**在TypeScript中最主要使用的模块化方案就是ES Module**
+**在TypeScript中最主要使用的`模块化方案就是ES Module`**
 
-js规范声明 `没有export的js文件都被认为是一个脚本。脚本文件中，变量和类型会被声明在共享的全局作用域中`
+  **我们需要理解TS中认为什么是一个模块**
 
-如果希望某个文件作为模块处理，只需要添加 `export {}`
-
-
-
-## 类型的查找和声明 .d.ts
-
-**.d.ts文件：**用来做`类型的声明(declare)`，称之为 `类型声明文件`或者`类型定义`
-
-该文件一般不写逻辑代码，`只有类型的声明`。
-
-- [ ] 内置类型声明   
-- [ ] 外部定义类型声明  (第三方库)
-- [ ] 自己定义类型声明
-
-**内置类型文件：**
-
-![image-20230814143957050](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230814143957050.png) **target：开发环境，最后打包到什么环境**
-
-`使用es7语法，且最后打包成es7的语法`
-
-- **lib:[]** (实际很少需要使用，他默认配置好了)
-
-![image-20230814144446332](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230814144446332.png)
-
-通过target和lib来决定哪些内置类型声明是可以使用的
+   -   在js中，`没有export的js文件都被认为是一个脚本。`
+   -   在脚本文件中，`变量和类型会被声明在共享的全局作用域`。(就会导致变量名冲突)
 
 
-
-**外部定义类型声明**
-
-- 常见的一些第三方库比如axios，它提供了相应的类型声明文件，直接导入对应类型即可。
-
-- 但是有些库自身没有相应的类型声明文件，可以通过 `社区的一个公有库DefinitelyTyped存放类型声明文件`。**即npm install @types/lodash**
-
+**TS也是如此！！！**
+    
+![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/17a53518d3454fd682ddc6727667d238~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=880&h=443&s=123442&e=png&b=242425)
+    
+    
 
 
-**自己定义类型声明**
-
-如果库里不自带，社区公有库里也没有，只能自定义一个 **.d.ts文件**
-
-![image-20230814154220743](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230814154220743.png) 
+如果希望某个文件作为模块处理，只需要添加 `export {}`，这会把文件改成一个`没有导出任何内容`的`模块`。`但是该模块就会有自己的局部作用域，不会和别的模块产生冲突`
+    
+> 直接声明一个index.d.ts文件，且没有`export {}`,说明该文件是全局的，因此外界可以直接调用，ts编译器不会报错。但也因此会导致大量的全局变量名冲突。过去的解决方案是声明namespace，但随着es module的出现，就不需要了
 
 
-
-> 什么情况下，我们需要自己来定义声明文件呢？
->
-> 1. 我们 `使用的第三方库是一个纯js库，没有声明文件。如lodash`
-> 2. 我们给 `自己的代码中声明一些类型`，方便在其他地方直接进行使用
-
-
-
-![image-20230814155927553](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230814155927553.png) ![image-20230814155942280](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230814155942280.png)
-
-**使用时，它会自动到.d.ts中查找对应的类型**
+![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/437c37727be444928c557603b38e412f~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=280&h=94&s=13579&e=png&b=1f1f1f)
+    
+**TS模块中类型的导入**
 
 ```ts
-//模块的声明  给lodash模块里的方法或变量声明类型
-declare module 'lodash' {
-    export function join(...args: any[]): any
+//一般ts文件中，如果导入的是类型，推荐在类型前面加上一个type，表明导入的是一个类型
+import type { IPerson } from './type'
+const p: IPerson = {
+    name: 'zds',
+    age: 12
 }
-    
-//声明一个类型
-declare type IdType = number | string
-    
-
-//声明一个变量的类型
-declare const whyName: string //外部就可以直接使用whyName变量
-
-//ts 类的声明
-declare class Person {
-    name: string
-    age: number
-    constructor(name: string, age: number) {
-        this.name = name
-        this.age = age
-    }
-}
-    
-
 ```
 
-**TS中用到了图片等文件**，首先webpack需要配置对应的asset/resource，其次需要声明图片模块
+**添加type的作用：可以让非TS编译器知道(如babel)，`什么样的导入是可以安全移除的`。因为ts代码最后都是要被编译成js代码的，`TS的作用是让错误在编译时发现，不要在运行时出现`**    
+
+
+## 类型的查找
+
+**之前我们用的TS类型，都是我们自己定义的，但是我们也会用到一些其他类型，如**
 
 ```ts
-//声明文件模块 
-declare module '*.png'  //以.png结尾的图片声明
-declare module '*.jpg'
+const imgEL=document.querySelector('.img') as HTMLImageElement;
+```
 
+**这个HTMLImageElement类型来自哪里？这就 `涉及到ts对类型的管理和查找规则`**
+
+### .d.ts文件
+
+-   我们之前编写的.ts文件，这些都会被输出为.js文件
+-   但是还有一种特殊的.d.ts文件，他是**用来做类型的声明**， 称为`类型声明文件`
+-   它**只是用来做类型检测**，告知ts编译器我们有哪些类型
+
+**.d.ts文件中，一般自定义时不会将该文件作为一个模块,即不会export导出，那么`定义的类型默认写在全局里面`，外界可以直接使用**
+
+![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7c7ef531200a463d8ae17a85f3d9e865~tplv-k3u1fbpfcp-zoom-1.image) ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2dbbee4e21c34430af58cd83beca2ee5~tplv-k3u1fbpfcp-zoom-1.image)
+
+在一个项目当中，有以下类型声明文件：
+
+#### `内置类型声明`
+
+**在lib.d.ts文件中可以看到，它们都是没有导出的，直接声明在全局作用域的**
+
+![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/245cf51fe963459d88818f635383a13e~tplv-k3u1fbpfcp-zoom-1.image)
+
+#### `外部定义类型声明`(第三方库)
+
+**通常是我们使用时，需要用的一些类型声明**，**一般第三方库有两种类型声明方式：**
+
+-   在 `自己库中进行类型声明，编写(.d.ts)文件，如axios库`，**可以直接导入**
+
+    ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/99932dd73e9541a18ea6c7dd840164c1~tplv-k3u1fbpfcp-zoom-1.image)
+
+    ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ec5d2ccb3de940b7b3cbc93ba78b0e84~tplv-k3u1fbpfcp-zoom-1.image)
+
+-   也有一些包，**本身没有自带index.d.ts包，如react**。 但是**可以通过社区的公有库下载类型声明文件**。
+
+    ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e8bba368a71d402da101778ee71bcacd~tplv-k3u1fbpfcp-zoom-1.image)
+
+#### `自己定义类型声明文件`
+
+**如果，@types这个库里没有对应的外部类型声明文件，你就只能自己声明**
+
+```ts
+declare module 'lodash'   //通过declare直接声明module在全局作用域里是个模块
+​
 //使用
-import ss from './utils/ss.png'
-const imgEl = document.createElement('img')
-imgEl.src = ss
-document.body.appendChild(imgEl)
+import _ from 'lodash'
+_.join([a,b])  //但其实_类似于any类型，想对其进行任何操作都是可以的，也没有代码提示
 ```
-
-**没有声明会报错**
-
-![image-20230814161501503](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230814161501503.png) 
-
-
-
-
-
-`声明命名空间`
-
-比如通过script标签引入的jquery，它不是模块，自然无法声明模块。`但可以声明命名空间`
 
 ```ts
-declare namespace $ {
-    export function ajax(setting: any): any
+//稍微详细点
+declare module 'lodash' {
+    export function join(...args: any[]): any
 }
-
+​
 ```
 
+-   **什么情况下需要自己来定义声明文件呢？**
+
+1.  我们使用的`第三方库是一个纯的js库`，`没有index.d.ts`类型声明文件
+1.  给自己的代码中声明一些类型，方便在`其他地方直接调用`
+
+#### declare
+
+**declare作用：**
+
+-   `声明全局变量`。`declare` 可以用于在类型声明文件中声明全局变量的存在，以便在 TypeScript 代码中使用这些变量而不会引发编译错误
+
+    ```ts
+    // global.d.ts
+    declare const myGlobalVariable: string;
+    ​
+    // app.ts
+    console.log(myGlobalVariable); // TypeScript 不会报错，因为该变量已经通过声明存在的方式告诉了编译器
+    ​
+    ```
+
+-   `声明全局类型`。`declare` 可以用于在类型声明文件中`声明全局类型`，以提供类型信息并启用类型检查。例如：
+
+    ```ts
+    //global.d.ts
+    declare type whyName = string
+    ```
+
+    这样外界可以直接使用该类型
+
+    ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/08a88511fef146e5933995f617405a97~tplv-k3u1fbpfcp-zoom-1.image)
+
+<!---->
+
+-   可以用来声明模块，比如lodash模块默认没有index.d.ts类型声明文件，会报错，我们就需要自己声明该模块
+
+    `声明模块的语法`
+
+    ```
+    declare module '模块名' {
+        export function():any
+    }
+    ```
+
+    在`声明模块的内部`，我们可以通过`export导出对应库的类`、`函数`等
+
+<!---->
+
+-   可以**用来声明文件**，比如.png|.jpg。只有声明以后，png等文件才能被当做模块进行导入
+
+    ```ts
+    declare module '*.png' {
+        const src: string
+        export default src
+    }
+    ​
+    declare module '*.jpg'
+    ​
+    ```
 
 
 
 
-## tsconfig.json
+
+
+
+### 映射类型修饰符
+
+在使用映射类型时，有两个额外的修饰符可能会用到：
+
+-   一个是readonly，用于设置属性只读
+-   一个是 ? ,用于设置属性可选
+
+还可以通过 - 或者 + 来实现修饰符的添加删除，如果没有写前缀，默认是 +
+    ![image-20230810163352623](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a9749d0be1b34fde84b44abd7a9156e5~tplv-k3u1fbpfcp-zoom-1.image)
+    
+ # tsconfig.json
+
+**注意：如果当前目录下出现了tsconfig.json文件，说明该目录是TS项目的`根目录`**
 
 作用：
 
-- `主要作用`让编译器编译ts代码时知道`如何去编译ts代码`并进行`类型检测`。
+-   **指定了需要ts编译的文件和编译选项，让TS在编译时知道如何去编译TS代码和进行类型检测。**
+-   **让编辑器可以按照正确方式识别TS代码，对哪些语法进行提示，哪些进行报错**
 
-  (比如是否允许不明确的this，是否允许隐式的any，将ts代码编译成什么版本的js代码)
+jsconfig.json：也是让编译器知道编译js代码时，哪些需要提示(路径跳转)，哪些需要进行报错
 
-- 让vscode可以按照正确的方式识别ts代码，对于哪些语法进行提示，报错等。
+## 常见配置项
 
+-   **顶层配置**
 
+| 属性              | 值   | 作用                                                                                      |
+| --------------- | --- | --------------------------------------------------------------------------------------- |
+| compilerOptions |     | 后续详解                                                                                    |
+| files           |     | 编写一个数组，用于指定项目中包括哪些文件 通常当项目中文件较少时，可以使用，一般不需要配置                                           |
+| include         | [ ] | 如果不指定include，那么默认会把项目下的所有ts文件进行编译。 指定includes:['src/ ***/* *.ts']，那么会编译src下所有`子目录的ts文件` |
+| exclude         | []  | 不需要编译的文件                                                                                |
 
-**常见配置**
+-   "**compilerOptions**":
 
-`顶层配置`
+    | 属性                           | 值               | 作用                                                                                                                    |
+    | ---------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------- |
+    | target                       | esnext          | 将ts代码更新为最新的es13代码，但是最终还是会通过babel进行转化                                                                                  |
+    | module                       | ESNext、CommonJS | `生成的代码`采用的`模块化`方式，但是最后还是会通过babel进行转化                                                                                  |
+    | strict                       | boolean         | TS中的严格模式：允不允许使用模糊的any                                                                                                 |
+    | allowJs                      | boolean         | 是否允许使用js代码                                                                                                            |
+    | jsx                          | preserve        | 对于jsx代码进行保留，不需要tsc进行编译，babel会对其进行转换                                                                                   |
+    | importHelpers                | boolean         | TS中有个包tslib,类似于babel中的polyfill。(当前环境不支持某个高级api，进行打补丁，从而使用高级特性)                                                        |
+    | moduleResolution             | "node"          | 引入模块时使用什么算法来查找路径，用node即可                                                                                              |
+    | skipLibCheck                 | boolean         | 跳过对整个库的类型监测， 仅仅监测自己使用到的类型（很少用）                                                                                        |
+    | esModuleInterop              | boolean         | 可以让esmodule和commonjs互相调用，即用**import导入commonjs中module.exports导出的代码**                                                   |
+    | allowSyntheticDefaultImports | boolean         | (不要用) 比如：export {aa,bb} ,导入 import {aa,bb} from 或者是import * as x from 不能直接import xx from xx，打开的话就可以它等同于import * as xx |
+    | path                         | {'@':['src/*']} | 配置路径别名提示                                                                                                              |
+    | lib                          | 一般不配置           | 指定我们需要使用的库                                                                                                            |
 
-```ts
-{
-     "files": [] //指定项目中哪些文件需要编译，使用的很少
-    "include": ["./src/**/*.ts"] //编译src下所有子目录下的所有.ts文件
-    "exclude": [] //哪些文件不需要编译
-    "compilerOptions":{} //
-}
+[tsconfig.json详细配置](https://juejin.cn/post/7259715842873655333?searchId=20231101141850D6E1973B1F490153B50A#heading-0)
+    
+    
+    
+ # TS关键字
+
+## keyof
+
+```
+keyof T  //获取属性名的联合类型
 ```
 
+`作用：获取类型T上所有公共属性名的联合类型`
 
+```
+interface Eg1 {
+  name: string,
+  readonly age: number,
+}
+// T1的类型实则是name | age
+type T1 = keyof Eg1
+​
+class Eg2 {
+  private name: string;
+  public readonly age: number;
+  protected home: string;
+}
+// T2实则被约束为 age
+// 而name和home不是公有属性，所以不能被keyof获取到
+type T2 = keyof Eg2
+​
+```
 
+## T[k]
 
+`索引查询`
 
+**作用：根据接口(对象类型)中的key，获取`属性值的类型`**
 
+**type V3 = Eg1[keyof Eg1]** 🔥🔥🔥
 
-## axios封装
+```
+interface Eg1 {
+  name: string,
+  readonly age: number,
+}
+// string
+type V1 = Eg1['name']
+// string | number
+type V2 = Eg1['name' | 'age']
+// any
+type V2 = Eg1['name' | 'age2222']
+// string | number
+type v2 = Eg1[keyof Eg1]
+​
+```
 
-### 最基础的版本
+**注意：如果多个score:number,最后依然返回string|number。因为相同类型的会被合并，never会被去除**
 
-```ts
-import axios from 'axios'
-import type { AxiosInstance, AxiosRequestConfig } from 'axios'
-class HYRequest {
-    public instance: AxiosInstance
-    constructor(config: AxiosRequestConfig) {
-        //创建出实例
-        this.instance = axios.create(config)
+```
+type People = {
+    name: string
+    age: number
+    score: never
+}
+type keys = keyof People
+type values = People[keys]  //结果为 string|number
+```
+
+## extends
+
+-   用于接口，表示接口的继承
+
+    ```
+    interface T1 {
+      name: string,
     }
-    //封装网络请求方法
-    request(config: AxiosRequestConfig) {
-        return this.instance.request(config)
+    ​
+    interface T2 {
+      sex: number,
     }
-    get(){}
-}
+    ​
+    /**
+     * @example
+     * T3 = {name: string, sex: number, age: number}
+     */
+    interface T3 extends T1, T2 {
+      age: number,
+    }
+    ​
+    //T3接口必须同时满足T1和T2
+    let t:T3 = {
+        name:'1',
+        sex:1,
+        age:1
+    }
+    ​
+    ```
 
-export default HYRequest
+<!---->
+
+-   **表示条件类型，用于条件判断**
+
+表示条件判断，如果前面的条件满足，则返回问号后的第一个参数，否则第二个。类似于js的三元运算。
 
 ```
+/**
+ * @example
+ * type A1 = 1
+ */
+type A1 = 'x' extends 'x' ? 1 : 2;
+​
+/**
+ * @example
+ * type A2 = 2
+ */
+type A2 = 'x' | 'y' extends 'x' ? 1 : 2;
+​
+/**
+ * @example
+ * type A3 = 1 | 2
+ */
+type P<T> = T extends 'x' ? 1 : 2;
+type A3 = P<'x' | 'y'>
+​
+```
 
+**注意：**
 
+-   如果用于简单的条件判断，则是直接判断前面的类型是否可分配给后面的类型
+-   若`extends`前面的类型是泛型，且泛型传入的是联合类型时，则会依次判断该联合类型的所有子类型是否可分配给extends后面的类型（是一个分发的过程）。
 
-### 升级版本
+**总结，就是`extends`前面的参数为`泛型`时，且`泛型为联合类型时`，则会分解（依次遍历所有的子类型进行条件判断）联合类型进行判断。然后将最终的结果组成新的联合类型。**
 
-[axios的封装](https://juejin.cn/post/7071518211392405541#heading-7)
+**如果不是泛型，前面直接是联合类型，那么也是直接判断前面类型是否可分配给后面类型**。如A2，自然是false，返回类型2
 
-[axios取消请求](https://juejin.cn/post/7262537799289569337)
+* * *
 
+**阻止extends关键字对于`泛型传入联合类型`的分发**
 
+```
+type P<T> = [T] extends ['x'] ? 1 : 2;
+/**
+ * type A4 = 2;
+ */
+type A4 = P<'x' | 'y'>
+​
+```
 
-# TS条件类型和内置符号
+* * *
 
-**keyof **
+## infer
 
-将一个对象的属性提取出来，转化为联合类型。
+在**条件类型中使用**，可以从正在`比较的类型`中推断类型，然后在`true分支`里引用该`推断结果`
 
+# 类型兼容性
 
+> 集合论中，如果一个集合的所有元素在集合B中都存在，则A是B的子集；
+>
+> 类型系统中，如果一个**类型的属性更具体**，则该类型是子类型。（因为属性更少则说明该类型约束的更宽泛，是父类型）
 
-extends
+**因此，我们可以得出基本的结论：子类型比父类型更加具体,父类型比子类型更宽泛**
 
-接口是继承，泛型是条件约束
+`因此，子类型可以赋值给父类型，但是父类型不能赋值给子类`
 
+# TS内置类型工具
 
+## partial
 
+`Parital<T>`：**传入一个对象类型，返回一个新类型，新类型中其所有属性变为可选**
 
+```
+/**
+ * 核心实现就是通过映射类型遍历T上所有的属性，
+ * 然后将每个属性设置为可选属性
+ */
+type Partial<T> = {
+  [P in keyof T]?: T[P];
+}
+```
 
+扩展一下，可以指定**哪几个属性变为可选**
 
+```
+//扩展一下，将传入的属性变为可选 ,K是联合类型,属于T的键名组成的联合类型
+type PartialOptional<T, K extends keyof T> = {
+    [p in K]?: T[p]
+}
+type Eg1 = PartialOptional<{ key1: string; key2: number; key3: number }, 'key1' | 'key2'>
+//Eg1 {key1?:string,key2?:string}
+```
 
-## ReturnType 
+```
+type PartialOptional<T, K extends keyof T> = Partial<Pick<T, K>>
+```
 
-**内置工具，可以获取函数的`返回值的类型`**
+## Readonly
+
+`Readonly<T>`:**传入一个对象类型，返回一个新的类型，该类型中所有属性变为可读**
+
+使用：
+
+```
+type Person = {
+    name: string
+    age: number
+}
+​
+type p = Readonly<Person>
+​
+```
+
+自实现
+
+```
+type MyReadonly<T> = {
+    readonly [k in keyof T]: T[k]
+}
+​
+type p2 = MyReadonly<Person>
+​
+type ReadonlyOptional<T, K extends keyof T> = {
+    readonly [P in K]: T[P]
+}
+​
+type p3 = ReadonlyOptional<Person, 'name'>
+​
+```
+
+## Pick
+
+`Pick<T,K extends keyof T>`：**传入一个类型和其key，返回一个新的对象类型**
+
+```
+type Person = {
+    name: string
+    age: number
+}
+type p1 = Pick<Person, 'age'>
+​
+```
+
+自实现：遍历联合类型K中的key,返回一个新的类型
+
+```
+type MyPick<T, K extends keyof T> = {
+    [P in K]: T[P]
+}
+```
+
+## Record
+
+构造一个`type`，`key`为联合类型中的每个子类型，类型为`T`。文字不好理解，先看例子：
+
+```
+/**
+ * @example
+ * type Eg1 = {
+ *   a: { key1: string; };
+ *   b: { key1: string; };
+ * }
+ * @desc 就是遍历第一个参数'a' | 'b'的每个子类型，然后将值设置为第二参数
+ */
+type Eg1 = Record<'a' | 'b', {key1: string}>
+```
+
+**自实现：**
+
+```
+type MyRecord<K extends string | number | symbol, T> = {
+    [P in K]: T
+}
+```
+
+## Exclude
+
+`Exclude<T, U>`提取存在于`T`类型，但不存在于`U`的类型组成的联合类型。 一般来说T泛型是对象key名组成的联合类型
+
+**Exclude<keyof T>**
+
+```
+/**
+ * 遍历T中的所有子类型，如果该子类型约束于U（存在于U、兼容于U），
+ * 则返回never类型，否则返回该子类型
+ */
+type Exclude<T, U> = T extends U ? never : T;
+​
+/**
+ * @example
+ * type Eg = 'key1'
+ */
+type Eg = Exclude<'key1' | 'key2', 'key2'>
+​
+type Person = {
+    name: string
+    age: number
+    score:number
+}
+​
+//存在于T但不存在于K
+type A = Exclude<keyof Person, 'name'> //结果A： "age"|"score"
+export {}
+​
+```
+
+## Extract
+
+`Extract<T, U>`提取联合类型T和联合类型U的所有交集。
+
+**Extract用的就是extends条件判断传入泛型的情况。如果extends作为条件判断，左边是一个联合类型，那么它会遍历子类型，判断是否属于右边类型，如果属于，最后会拼接成一个满足条件的联合类型返回**
+
+```
+type MyExtract<T, U> = T extends U ? T : never
+​
+type A = MyExtract<string | number, number | string>  //结果 number|string
+```
+
+## Omit
+
+`Omit<T, K>`从类型`T`(**因此，T是对象类型**)中剔除`K`(**K是联合类型**)中的所有属性,最后**返回一个新的对象类型**
+
+```
+type Person = {
+    name: string
+    age: number
+}
+type A = Omit<Person, 'name'>
+​
+```
+
+**自实现：**
+
+```
+//参数T对应的类型，K需要去除的属性
+type MyOmit<T, K extends keyof T> = {
+    //Exclude<T,K> 即存在于T，不存在K所组成的类型。因为一般会传入联合类型，它的本质是extends，它会遍历联合类型的子类型，分别判断其是否存在于K中。
+    [P in Exclude<keyof T, K>]: T[P]  //传入T的属性所构成的联合类型，不存在于K的类型(即去除了K)
+}
+type A = MyOmit<{ name: string; age: number }, 'name'>
+​
+```
+
+* * *
+
+**取巧，利用Pick实现**
+
+`Omit<T, K>`从类型`T`中剔除`K`中的所有属性。
+
+```
+typescript复制代码/**
+ * 利用Pick实现Omit
+ */
+type Omit = Pick<T, Exclude<keyof T, K>>;
+```
+
+-   换种思路想一下，其实现可以是利用`Pick`提取我们需要的keys组成的类型
+-   因此也就是 `Omit = Pick<T, 我们需要的属性联合>`
+-   而我们需要的属性联合就是，从T的属性联合中排出存在于联合类型K中的
+-   因此也就是`Exclude<keyof T, K>`
+
+## Optional
+
+**T：传入的对象类型，K对应的键名构成的联合类型，将其变为可选**
 
 ```ts
-type CalcFnType = (num1: number, num2: number) => number
-function foo() {
-    return 'abc'
+type Optional<T, K extends keyof T> = Partial<Pick<T, K>> & Omit<T, K>
+​
+type Person = {
+    name: string
+    age: number
 }
-type FooReturnType = ReturnType<CalcFnType>
-type fooReturnType = ReturnType<typeof foo>
+​
+type A = Optional<Person, 'name'>
 ```
 
-![image-20230816142527383](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230816142527383.png) 
+如果没有Omit的话，那么age属性就会被去除掉
 
+**写法②**
 
+```
+type Optional2<T, K extends keyof T> = {
+    [P in K]?: T[P]
+} & Omit<T, K>
+type B = Optional2<Person, 'age'>
+​
+//再抽象点，把Omit写成原生的
+type Optional2<T,K extends keyof T> = {
+    [P in K]?:T[P]
+} & {[P in Exclude<keyof T,K>]:T[P]}
+```
 
+## Parameters
 
+**Parameters 获取函数的`参数类型`，将每个参数类型放在一个元组中。**
 
-## infer--推断
+```
+/**
+ * @example
+ * type Eg = [arg1: string, arg2: number];
+ */
+type Eg = Parameters<(arg1: string, arg2: number) => void>;
+```
 
-**需要`配合extends进行泛型约束`，从正在比较的类型中推断类型，然后在true分支里引用该推断结果**
+-   `Parameters`首先约束参数`T`必须是个**函数类型**，所以`(...args: any) => any>`替换成`Function`也是可以的
+-   具体实现就是，判断`T`是否是函数类型，如果是则使用`inter P`让ts自己推导出函数的参数类型，并将推导的结果存到类型`P`上，否则就返回`never`；
 
+**自实现**:
 
+```
+type MyParameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? P : never
+```
 
-**自实现ReturnType**
+## ReturnType
 
-> 需要传入一个类型，它必须是函数。因此定义一个泛型，泛型约束的函数类型。然后通过inter推断函数的返回值类型
+传入一个函数类型，返回其返回值的类型
 
-```ts
-type MyReturnType<T extends (...args: any[]) => any> = T extends (...args: any[]) => infer R ? R : never
+## InstanceType
 
-function foo() {
-    return '123'
+使用： `传入一个类的类型，获取其实例类型`
+
+```
+class Person {}
+​
+const p1: Person = new Person()
+//typeof 类：本质上获取到的是类的构造函数类型
+//InstanceType<typeof Person> ： 获取构造函数构造出来的实例的类型
+type HYPerson = InstanceType<typeof Person>
+​
+```
+
+# 类型体操
+
+## FunctionKeys
+
+获取`T`中所有类型为函数的`key`组成的联合类型。
+
+```
+type NonUndefined<T> = T extends undefined ? never : T
+​
+//获取T中所有属性值类型为函数的key组成的联合类型
+​
+//先找出其所有属性值类型为函数的对象类型，同时将属性值变为其属性名，如果不是函数类型，那么类型为never
+//最后通过 对象类型[keyof 对象类型] 获取到所有属性值不为never构成的联合类型
+type FunctionKeys<T extends object> = {
+    [P in keyof T]: NonUndefined<T[P]> extends Function ? P : never
+}[keyof T]
+​
+type Person = {
+    name: () => void
+    age: () => void
+    score: number
 }
-type fooReturnType = MyReturnType<typeof foo>
+type p = FunctionKeys<Person>
+​
+```
+
+## OptionalKeys
+
+目标：`OptionalKeys<T>`提取T中所有可选类型的key组成的联合类型。
+
+* * *
+
+**这里需要知道一个细节 `{} extends {当前key:值}` 可以判断`当前key`是否是可选的**
+
+```
+type OptionalKeys<T> = {
+    [P in keyof T]: {} extends Pick<T, P> ? P : never
+}[keyof T]
+​
 ```
 
 
+
+# TS内置符号
 
 ## Omit--缺省
 
@@ -2253,14 +2541,6 @@ const todo1: TodoOmited = {
     completed: true,
 }
 ```
-
-
-
-
-
-
-
-
 
 ## Pick--挑选
 
@@ -2282,8 +2562,6 @@ const todo1: TodoOmited = {
 }
 
 ```
-
-
 
 ## Partial--可选
 
@@ -2309,14 +2587,6 @@ const todo1: TodoOmited = {
 }
 ```
 
-
-
-## **Record<Keys,Type>**
-
-**用于构造一个对象类型，它所有的key都是Keys类型，它的value值都是Type类型**
-
-![image-20230816144306632](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230816144306632.png) 
-
 ## ThisParameterType
 
 > 获取某一类型中this的类型
@@ -2335,11 +2605,37 @@ let n: fooThisType = {
 }
 ```
 
-![image-20230808163206735](https://gitee.com/zhengdashun/pic_bed/raw/master/img/image-20230808163206735.png)
-
-
+![image-20230808163206735](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9fb99bda489c478fad5e4a1dd4124c98~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## OmitThisParameter
 
 > 用于移除一个函数类型Type的this参数类型，并且返回当前的函数类型
 
+
+## InstanceType
+
+语法：InstanceType<泛型>
+
+作用：传入构造签名，获**取构造函数创建出来的具体的实例对象的类型**
+
+```ts
+class Person {}
+​
+const p1: Person = new Person()
+​
+//typeof Person  获取Person类也是构造函数具体的类型
+//InstanceType   获取构造函数创建出来的具体的实例对象的类型
+type HYPerson = InstanceType<typeof Person>
+​
+const p2: HYPerson = new Person()
+​
+//传入一个构造函数，返回其实例  (InstanceType<T>需要传入构造签名，返回对应的实例类型)
+function factory<T extends new (...args: any[]) => any>(
+  ctor: T
+): InstanceType<T> {
+  return new ctor()
+}
+​
+const p3 = factory(Person)
+​
+```
